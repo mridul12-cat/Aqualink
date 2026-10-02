@@ -1,15 +1,30 @@
-# Environments & Dependencies
-backend/venv/
+# Node / Frontend
 node_modules/
-.pytest_cache/
+dist/
+build/
+.next/
+*.tsbuildinfo
+
+# Python / Backend
 __pycache__/
 *.py[cod]
 *$py.class
+.venv/
+venv/
+env/
+backend/venv/
+.pytest_cache/
 
-# Build Artifacts
-frontend/dist/
+# Local Secrets & Environments
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
 *.log
 
-# System files
+# System & Editor
 .DS_Store
-.env
+Thumbs.db
+.vscode/
+.idea/
