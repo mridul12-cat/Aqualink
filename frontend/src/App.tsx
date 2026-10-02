@@ -53,7 +53,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col selection:bg-teal-500 selection:text-slate-950">
+    <div className="min-h-screen bg-slate-950 flex flex-col selection:bg-teal-500 selection:text-slate-950 overflow-x-hidden">
       
       {/* Top Navigation */}
       <Navbar
