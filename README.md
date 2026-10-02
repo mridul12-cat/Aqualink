@@ -16,9 +16,9 @@
 
 | Rubric Metric | Weight | AquaLink OneHealth Implementation & Operational Proof |
 | :--- | :---: | :--- |
-| **Impact & OneAquaHealth Alignment** | **30%** | Explicit mathematical bridge linking freshwater metrics (pH, DO, turbidity, benthic EPT macroinvertebrates) directly to **public health hazard vectors** (waterborne pathogens, *Culex* mosquito breeding in hypoxic pools, cyanobacterial HAB toxins, and contact advisories). |
+| **Impact & OneAquaHealth Alignment** | **30%** | Explicit mathematical bridge linking freshwater metrics (pH, DO, turbidity, benthic EPT macroinvertebrates) directly to **public health hazard vectors** (waterborne pathogens, *Culex* mosquito breeding in hypoxic pools, cyanobacterial HAB toxins, and contact advisories). Calibrated across official **EU Horizon OneAquaHealth pilot basins** (**Coimbra, Portugal**; **Benevento, Italy**; **Oslo, Norway**) and international benchmarks. |
 | **Innovation & Creativity** | **20%** | **Multi-stage AI Verification Agent** providing real-time contradiction detection (e.g. flagging impossible Plecoptera stonefly reports in hypoxic waters, or "crystal clear" reports with high NTU) paired with explainable reasoning and vision annotation analysis. |
-| **Technical Implementation** | **20%** | Production-ready full-stack monorepo: FastAPI backend, Pydantic schemas, 23 automated pytest tests, React 19 + TypeScript + Tailwind CSS frontend, and Docker Compose reproducibility. |
+| **Technical Implementation** | **20%** | Production-ready full-stack monorepo: FastAPI backend, Pydantic schemas, 27 automated pytest tests, React 19 + TypeScript + Tailwind CSS frontend, and Docker Compose reproducibility. |
 | **Usability & UX** | **15%** | Track 1 compliant citizen streamkeeper workflow: guided visual counters for bio-indicators, instant validation feedback, interactive geospatial risk map, and plain-language ecological translation. |
 | **Feasibility & Scalability** | **15%** | Standards-compliant Track 7 backend: direct transformation into **HL7 FHIR R4 `Observation` and `RiskAssessment` resources** with standard LOINC codes (appealing to **HL7 Europe & EFMI**), alongside **OGC GeoJSON** for spatial sensor networks. |
 
@@ -144,11 +144,11 @@ Open `http://localhost:5173` in your browser.
 │   │   │   ├── fhir_converter.py    # HL7 FHIR R4 transformation
 │   │   │   ├── ogc_converter.py     # OGC GeoJSON exporter
 │   │   │   ├── onehealth_risk.py    # Public health & vector hazard algorithms
-│   │   │   ├── seed_data.py         # 12 diverse urban stream stations
+│   │   │   ├── seed_data.py         # 12 diverse urban stream stations across EU & Global pilots
 │   │   │   └── water_quality.py     # WQI, BMWP, FBI, and DO physics
 │   │   ├── config.py
 │   │   └── main.py
-│   ├── tests/                       # 23 automated pytest test cases
+│   ├── tests/                       # 27 automated pytest test cases
 │   ├── requirements.txt
 │   └── Dockerfile
 ├── frontend/
