@@ -248,8 +248,8 @@ export const StreamMap: React.FC<StreamMapProps> = ({ streams, onSelectStream })
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 h-[620px]">
         
         {/* Interactive Leaflet Map Container */}
-        <div className="lg:col-span-3 rounded-xl overflow-hidden border border-slate-800 relative shadow-inner">
-          <div ref={mapContainerRef} className="w-full h-full" />
+        <div className="lg:col-span-3 rounded-xl overflow-hidden border border-slate-800 relative shadow-inner isolate z-0">
+          <div ref={mapContainerRef} className="w-full h-full z-0" />
           
           {/* Map Legend Overlay */}
           <div className="absolute bottom-4 left-4 z-[400] bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-lg p-2.5 text-xs space-y-1 shadow-lg">

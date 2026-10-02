@@ -62,7 +62,7 @@ export const StreamDetailModal: React.FC<StreamDetailModalProps> = ({ stream, on
     'bg-rose-500/20 text-rose-400 border-rose-500/40';
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-[9999] bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
       <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative">
         
         {/* Modal Header */}
