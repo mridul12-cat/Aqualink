@@ -82,8 +82,8 @@ def validate_stream_observation(obs: CitizenObservationCreate) -> AIValidationRe
         confidence -= 18.0
 
     # 3. Ecological & Bio-indicator Paradoxes
-    # Stoneflies (Plecoptera) and mayflies (Ephemeroptera) require oxygenated, unpolluted waters
-    sensitive_ept_count = bio.stonefly_nymphs + bio.mayfly_nymphs
+    # Sensitive EPT taxa: Plecoptera (stoneflies), Ephemeroptera (mayflies), Trichoptera (caddisflies)
+    sensitive_ept_count = bio.stonefly_nymphs + bio.mayfly_nymphs + bio.caddisfly_larvae
     if bio.stonefly_nymphs > 0 and readings.dissolved_oxygen_mg_l < 4.0:
         contradictions.append(
             f"Ecological Paradox: Stonefly nymphs ({bio.stonefly_nymphs}) reported in severely hypoxic water ({readings.dissolved_oxygen_mg_l} mg/L DO). "

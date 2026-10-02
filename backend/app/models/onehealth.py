@@ -3,7 +3,12 @@ from enum import Enum
 from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
 from datetime import datetime
-from .observation import CitizenObservationCreate
+from .observation import (
+    CitizenObservationCreate,
+    PhysicalChemicalReadings,
+    BioIndicators,
+    VisualObservations
+)
 
 class RiskLevel(str, Enum):
     LOW = "LOW"
@@ -93,8 +98,8 @@ class StreamObservationRecord(BaseModel):
     observer_name: str
     observer_tier: str
     notes: Optional[str] = None
-    readings: Any
-    bio: Any
-    visual: Any
+    readings: PhysicalChemicalReadings
+    bio: BioIndicators
+    visual: VisualObservations
     assessment: OneHealthAssessment
     fhir_observation_count: int = 0

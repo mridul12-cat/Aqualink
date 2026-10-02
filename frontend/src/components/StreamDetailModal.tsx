@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StreamObservationRecord } from '../types';
+import { StreamObservationRecord, PILOT_BASINS, PilotCityId } from '../types';
 import { fetchSingleFhir } from '../services/api';
 import {
   X,
@@ -72,6 +72,12 @@ export const StreamDetailModal: React.FC<StreamDetailModalProps> = ({ stream, on
               <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-slate-800 text-teal-400 border border-slate-700">
                 {stream.station_id}
               </span>
+              {stream.pilot_city && (
+                <span className="inline-flex items-center space-x-1 font-mono text-xs font-semibold px-2 py-0.5 rounded bg-slate-800/80 text-sky-300 border border-sky-500/30">
+                  <span>{PILOT_BASINS[stream.pilot_city as PilotCityId]?.flag || '🌍'}</span>
+                  <span>{PILOT_BASINS[stream.pilot_city as PilotCityId]?.city || stream.pilot_city}</span>
+                </span>
+              )}
               <span className="text-xs text-slate-400">{stream.catchment_basin}</span>
               <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${advisoryBadge}`}>
                 {hazards.recreational_advisory} CONTACT
@@ -265,6 +271,66 @@ export const StreamDetailModal: React.FC<StreamDetailModalProps> = ({ stream, on
               </div>
             </div>
           </div>
+
+          {/* Benthic Macroinvertebrate Survey Counts */}
+          {stream.bio && (
+            <div className="bg-slate-950 border border-slate-800 rounded-xl p-4">
+              <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center justify-between">
+                <span>Benthic Macroinvertebrate Survey Observations</span>
+                <span className="text-[10px] text-teal-400 font-normal">BMWP: {bio.bmwp_score} ({bio.bmwp_class})</span>
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                  <span className="text-slate-400 block text-[10px]">Stonefly Nymphs</span>
+                  <span className="font-mono font-bold text-teal-300">{stream.bio.stonefly_nymphs}</span>
+                </div>
+                <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                  <span className="text-slate-400 block text-[10px]">Mayfly Nymphs</span>
+                  <span className="font-mono font-bold text-teal-300">{stream.bio.mayfly_nymphs}</span>
+                </div>
+                <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                  <span className="text-slate-400 block text-[10px]">Caddisfly Larvae</span>
+                  <span className="font-mono font-bold text-teal-300">{stream.bio.caddisfly_larvae}</span>
+                </div>
+                <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                  <span className="text-slate-400 block text-[10px]">Freshwater Shrimp</span>
+                  <span className="font-mono font-bold text-teal-300">{stream.bio.freshwater_shrimp}</span>
+                </div>
+                <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                  <span className="text-slate-400 block text-[10px]">Dragonfly Nymphs</span>
+                  <span className="font-mono font-bold text-amber-300">{stream.bio.dragonfly_nymphs}</span>
+                </div>
+                <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                  <span className="text-slate-400 block text-[10px]">Beetle Larvae</span>
+                  <span className="font-mono font-bold text-amber-300">{stream.bio.beetle_larvae}</span>
+                </div>
+                <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                  <span className="text-slate-400 block text-[10px]">Blackfly Larvae</span>
+                  <span className="font-mono font-bold text-amber-300">{stream.bio.blackfly_larvae}</span>
+                </div>
+                <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                  <span className="text-slate-400 block text-[10px]">Tubifex Worms</span>
+                  <span className="font-mono font-bold text-rose-400">{stream.bio.tubifex_worms}</span>
+                </div>
+                <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                  <span className="text-slate-400 block text-[10px]">Midges / Bloodworms</span>
+                  <span className="font-mono font-bold text-rose-400">{stream.bio.midges_bloodworms}</span>
+                </div>
+                <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                  <span className="text-slate-400 block text-[10px]">Leeches</span>
+                  <span className="font-mono font-bold text-rose-400">{stream.bio.leeches}</span>
+                </div>
+                <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                  <span className="text-slate-400 block text-[10px]">Pouch Snails</span>
+                  <span className="font-mono font-bold text-rose-400">{stream.bio.pouch_snails}</span>
+                </div>
+                <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                  <span className="text-slate-400 block text-[10px]">Algal Cover / Fish</span>
+                  <span className="font-mono font-bold text-slate-200">{stream.bio.algal_cover_pct}% / {stream.bio.live_fish_observed} live</span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Actionable Interventions */}
           <div className="bg-slate-950 border border-slate-800 rounded-xl p-4">

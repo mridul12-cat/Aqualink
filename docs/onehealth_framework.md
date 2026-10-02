@@ -5,7 +5,7 @@ The IEEE OneAquaHealth initiative advocates for a **"One Health"** paradigm: the
 
 Urban streams are the ultimate sentinels of environmental health. However, conventional monitoring data is severely siloed: municipal hydrologists measure water quality in disconnected spreadsheets, while public health epidemiologists monitor waterborne illness or mosquito-borne disease outbreaks weeks later in clinics and hospitals.
 
-**AquaLink OneHealth** provides the missing algorithmic bridge: converting field observations from citizen science streamkeepers into instant, validated, actionable One Health intelligence.
+**AquaLink OneHealth** provides the missing algorithmic bridge: converting field observations from citizen science streamkeepers into instant, validated, actionable One Health intelligence. The platform is calibrated across 30 monitoring stations situated across 4 international river basins: the official EU Horizon OneAquaHealth pilots in **Coimbra, Portugal** (6 stations), **Benevento, Italy** (6 stations), and **Oslo, Norway** (6 stations), paired with reference urban streams in **Portland, USA** (12 stations).
 
 ---
 
@@ -39,9 +39,9 @@ $$WQI = \sum_{i=1}^n w_i \cdot q_i$$
 
 #### Biological Monitoring Working Party (BMWP)
 Macroinvertebrate taxa are weighted according to their physiological sensitivity to organic pollution:
-- **Group 1 (Pollution Sensitive, Score = 10)**: *Plecoptera* (Stonefly nymphs), *Ephemeroptera* (Mayfly nymphs), *Trichoptera* (Caddisfly larvae).
-- **Group 2 (Moderately Tolerant, Score = 5-8)**: *Odonata* (Dragonfly nymphs), *Coleoptera* (Beetle larvae), *Diptera: Simuliidae* (Blackfly larvae).
-- **Group 3 (Organic Pollution Tolerant, Score = 1-3)**: *Oligochaeta* (Tubifex sludge worms), *Hirudinea* (Leeches), *Chironomidae* (Bloodworms/Midges), *Gastropoda* (Pouch snails).
+- **Group 1 (Pollution Sensitive, Score = 6-10)**: *Plecoptera* (Stonefly nymphs, 10), *Ephemeroptera* (Mayfly nymphs, 10), *Trichoptera* (Caddisfly larvae, 10), *Gammaridae* (Freshwater Shrimp, 6).
+- **Group 2 (Moderately Tolerant, Score = 5-8)**: *Odonata* (Dragonfly nymphs, 8), *Coleoptera* (Beetle larvae, 5), *Diptera: Simuliidae* (Blackfly larvae, 5).
+- **Group 3 (Organic Pollution Tolerant, Score = 1-3)**: *Oligochaeta* (Tubifex sludge worms, 1), *Hirudinea* (Leeches, 3), *Chironomidae* (Bloodworms/Midges, 2), *Gastropoda* (Pouch snails, 3).
 
 #### Hilsenhoff Family Biotic Index (FBI)
 $$FBI = \frac{\sum (n_i \cdot t_i)}{N}$$

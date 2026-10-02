@@ -39,6 +39,13 @@ One Health hazard scores and vector predictions are packaged as standard `RiskAs
 
 ---
 
+### 2.3 HL7 Europe Pilot Basin Extension
+To support multi-national cohort stratification across the EU Horizon OneAquaHealth pilot locations (**Coimbra, Portugal**; **Benevento, Italy**; **Oslo, Norway**) and international reference basins (**Portland, USA**), AquaLink OneHealth attaches an HL7 EU standard extension to each `Observation` and `RiskAssessment`:
+- Extension URL: `http://hl7.eu/fhir/environmental/StructureDefinition/pilot-city`
+- Value: `valueString` containing the pilot basin identifier (`coimbra`, `benevento`, `oslo`, `portland`).
+
+---
+
 ## 3. Sample FHIR R4 JSON Representation
 
 ```json
@@ -55,6 +62,12 @@ One Health hazard scores and vector predictions are packaged as standard `RiskAs
         "resourceType": "Observation",
         "id": "obs-temp-sta-001",
         "status": "final",
+        "extension": [
+          {
+            "url": "http://hl7.eu/fhir/environmental/StructureDefinition/pilot-city",
+            "valueString": "portland"
+          }
+        ],
         "category": [
           {
             "coding": [

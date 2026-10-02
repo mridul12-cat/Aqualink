@@ -2,7 +2,7 @@
 Converts citizen science stream observations into compliant FHIR Observation and RiskAssessment resources,
 enabling direct ingestion by clinical health systems, epidemiological registries (EFMI), and HL7 Europe tools.
 """
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from datetime import datetime, timezone
 import uuid
 
@@ -20,7 +20,8 @@ def create_fhir_observation(
     ucum_code: str,
     interpretation_code: str = "N",
     interpretation_display: str = "Normal",
-    notes: str = ""
+    notes: str = "",
+    pilot_city: Optional[str] = None
 ) -> Dict[str, Any]:
     """Generate a single HL7 FHIR R4 compliant Observation resource."""
     resource = {
@@ -90,6 +91,13 @@ def create_fhir_observation(
     }
     if notes:
         resource["note"] = [{"text": notes}]
+    if pilot_city:
+        resource["extension"] = [
+            {
+                "url": "http://hl7.eu/fhir/environmental/StructureDefinition/pilot-city",
+                "valueString": pilot_city
+            }
+        ]
     return resource
 
 def create_fhir_risk_assessment(
@@ -101,10 +109,11 @@ def create_fhir_risk_assessment(
     vector_risk: str,
     hab_risk: str,
     recreation_advisory: str,
-    actionable_interventions: List[str]
+    actionable_interventions: List[str],
+    pilot_city: Optional[str] = None
 ) -> Dict[str, Any]:
     """Generate an HL7 FHIR R4 RiskAssessment resource summarizing One Health hazards."""
-    return {
+    res = {
         "resourceType": "RiskAssessment",
         "id": assessment_id,
         "meta": {
@@ -169,6 +178,14 @@ def create_fhir_risk_assessment(
             }
         ]
     }
+    if pilot_city:
+        res["extension"] = [
+            {
+                "url": "http://hl7.eu/fhir/environmental/StructureDefinition/pilot-city",
+                "valueString": pilot_city
+            }
+        ]
+    return res
 
 def convert_observation_to_fhir_bundle(obs_record: Any) -> Dict[str, Any]:
     """Transform an entire stream observation record into a standard FHIR R4 Bundle."""
@@ -176,6 +193,7 @@ def convert_observation_to_fhir_bundle(obs_record: Any) -> Dict[str, Any]:
     timestamp = obs_record.timestamp or datetime.now(timezone.utc).isoformat()
     stream_name = obs_record.stream_name
     catchment = obs_record.catchment_basin
+    pilot_city = getattr(obs_record, "pilot_city", None)
     observer = obs_record.observer_name
     tier = obs_record.observer_tier
     readings = obs_record.readings
@@ -199,7 +217,8 @@ def convert_observation_to_fhir_bundle(obs_record: Any) -> Dict[str, Any]:
             unit="Cel",
             ucum_code="Cel",
             interpretation_code="H" if readings.temperature_c > 22.0 else "N",
-            interpretation_display="High" if readings.temperature_c > 22.0 else "Normal"
+            interpretation_display="High" if readings.temperature_c > 22.0 else "Normal",
+            pilot_city=pilot_city
         )
     })
     
@@ -227,7 +246,8 @@ def convert_observation_to_fhir_bundle(obs_record: Any) -> Dict[str, Any]:
             unit="pH",
             ucum_code="[pH]",
             interpretation_code=ph_interp,
-            interpretation_display=ph_display
+            interpretation_display=ph_display,
+            pilot_city=pilot_city
         )
     })
     
@@ -255,7 +275,8 @@ def convert_observation_to_fhir_bundle(obs_record: Any) -> Dict[str, Any]:
             unit="mg/L",
             ucum_code="mg/L",
             interpretation_code=do_interp,
-            interpretation_display=do_display
+            interpretation_display=do_display,
+            pilot_city=pilot_city
         )
     })
     
@@ -277,7 +298,8 @@ def convert_observation_to_fhir_bundle(obs_record: Any) -> Dict[str, Any]:
             unit="NTU",
             ucum_code="[NTU]",
             interpretation_code=turb_interp,
-            interpretation_display=turb_disp
+            interpretation_display=turb_disp,
+            pilot_city=pilot_city
         )
     })
     
@@ -296,7 +318,8 @@ def convert_observation_to_fhir_bundle(obs_record: Any) -> Dict[str, Any]:
                 display_name="Specific Conductance of Water",
                 value=readings.conductivity_us_cm,
                 unit="uS/cm",
-                ucum_code="uS/cm"
+                ucum_code="uS/cm",
+                pilot_city=pilot_city
             )
         })
 
@@ -317,7 +340,8 @@ def convert_observation_to_fhir_bundle(obs_record: Any) -> Dict[str, Any]:
                 unit="mg/L",
                 ucum_code="mg/L",
                 interpretation_code="H" if readings.nitrate_mg_l > 10.0 else "N",
-                interpretation_display="Elevated Nitrate" if readings.nitrate_mg_l > 10.0 else "Normal"
+                interpretation_display="Elevated Nitrate" if readings.nitrate_mg_l > 10.0 else "Normal",
+                pilot_city=pilot_city
             )
         })
 
@@ -338,7 +362,8 @@ def convert_observation_to_fhir_bundle(obs_record: Any) -> Dict[str, Any]:
                 unit="mg/L",
                 ucum_code="mg/L",
                 interpretation_code="H" if readings.phosphate_mg_l > 0.1 else "N",
-                interpretation_display="Elevated / Eutrophic Trigger" if readings.phosphate_mg_l > 0.1 else "Normal"
+                interpretation_display="Elevated / Eutrophic Trigger" if readings.phosphate_mg_l > 0.1 else "Normal",
+                pilot_city=pilot_city
             )
         })
 
@@ -352,7 +377,8 @@ def convert_observation_to_fhir_bundle(obs_record: Any) -> Dict[str, Any]:
         vector_risk=assessment.public_health_hazards.vector_borne_hazard.value,
         hab_risk=assessment.public_health_hazards.cyanobacterial_hab_risk.value,
         recreation_advisory=assessment.public_health_hazards.recreational_advisory.value,
-        actionable_interventions=assessment.actionable_interventions
+        actionable_interventions=assessment.actionable_interventions,
+        pilot_city=pilot_city
     )
     entries.append({
         "fullUrl": f"urn:uuid:{uuid.uuid4()}",

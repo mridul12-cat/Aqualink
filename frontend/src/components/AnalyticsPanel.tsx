@@ -43,12 +43,14 @@ export const AnalyticsPanel: React.FC<AnalyticsPanelProps> = ({ streams, onSelec
   const totalStoneflies = streams.reduce((sum, s) => sum + (s.bio.stonefly_nymphs || 0), 0);
   const totalMayflies = streams.reduce((sum, s) => sum + (s.bio.mayfly_nymphs || 0), 0);
   const totalCaddisflies = streams.reduce((sum, s) => sum + (s.bio.caddisfly_larvae || 0), 0);
+  const totalShrimp = streams.reduce((sum, s) => sum + (s.bio.freshwater_shrimp || 0), 0);
   const totalTubifex = streams.reduce((sum, s) => sum + (s.bio.tubifex_worms || 0), 0);
   const totalBloodworms = streams.reduce((sum, s) => sum + (s.bio.midges_bloodworms || 0), 0);
   const totalLeeches = streams.reduce((sum, s) => sum + (s.bio.leeches || 0), 0);
+  const totalSnails = streams.reduce((sum, s) => sum + (s.bio.pouch_snails || 0), 0);
 
-  const totalSensitive = totalStoneflies + totalMayflies + totalCaddisflies;
-  const totalTolerant = totalTubifex + totalBloodworms + totalLeeches;
+  const totalSensitive = totalStoneflies + totalMayflies + totalCaddisflies + totalShrimp;
+  const totalTolerant = totalTubifex + totalBloodworms + totalLeeches + totalSnails;
   const totalBugs = totalSensitive + totalTolerant || 1;
 
   // Catchment Basin Aggregates
@@ -102,6 +104,7 @@ export const AnalyticsPanel: React.FC<AnalyticsPanelProps> = ({ streams, onSelec
                 <span>Stoneflies: {totalStoneflies}</span>
                 <span>Mayflies: {totalMayflies}</span>
                 <span>Caddisflies: {totalCaddisflies}</span>
+                <span>Shrimp: {totalShrimp}</span>
               </div>
             </div>
 
@@ -117,9 +120,10 @@ export const AnalyticsPanel: React.FC<AnalyticsPanelProps> = ({ streams, onSelec
                 />
               </div>
               <div className="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span>Tubifex worms: {totalTubifex}</span>
+                <span>Tubifex: {totalTubifex}</span>
                 <span>Bloodworms: {totalBloodworms}</span>
                 <span>Leeches: {totalLeeches}</span>
+                <span>Snails: {totalSnails}</span>
               </div>
             </div>
           </div>

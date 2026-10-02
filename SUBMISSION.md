@@ -50,14 +50,14 @@ AquaLink OneHealth bridges these gaps with an end-to-end platform:
   - `ai_validator.py`: Multi-stage heuristic and reasoning agent validating physical constraints, sensor-visual concordance, and ecological guild consistency.
   - `fhir_converter.py`: HL7 FHIR R4 transformer mapping parameters to standard LOINC codes (`8040-0` Water Temp, `11558-4` pH, `2710-2` DO, `97561-5` Turbidity, `14860-1` Nitrate, `14879-1` Phosphate) and generating FHIR `RiskAssessment` resources.
   - `ogc_converter.py`: Exports spatial data adhering to OGC GeoJSON CRS84 specifications.
-  - `seed_data.py`: Seeded network of 12 diverse urban stream stations across pristine headwaters, agricultural runoffs, industrial culverts, and restored wetlands.
+  - `seed_data.py`: Seeded network of 30 diverse urban stream stations across 4 EU & International pilot basins: Coimbra (Portugal), Benevento (Italy), Oslo (Norway), and Portland (USA).
 - **Frontend Dashboard**: Built with **React 19**, **TypeScript**, **Vite**, and **Tailwind CSS**:
   - Interactive Leaflet geospatial map with custom SVG risk pins and stream profile popups.
   - Guided observation wizard with live debounced AI validation feedback.
   - Early Warning Resilience Panel with municipal dispatch simulation.
   - Interactive Watershed Analytics comparing EPT biodiversity and catchment baselines.
   - Interactive Standards Inspector with live FHIR R4 Bundle and OGC GeoJSON viewers.
-- **Automated Verification**: Monorepo includes **27 automated pytest tests** and **5 frontend unit tests** covering physical-chemical calculations, bio-indices, pathogen risk, vector hazards, contradiction detection, and REST endpoints.
+- **Automated Verification**: Monorepo includes **32 automated pytest tests** and **9 frontend unit tests** (41 total automated tests) covering physical-chemical calculations, bio-indices, pathogen risk, vector hazards, contradiction detection, and REST endpoints.
 - **Single-Command Reproducibility**: Containerized using multi-stage `Dockerfile`s and a root `docker-compose.yml`.
 
 ---

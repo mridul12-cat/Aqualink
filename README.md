@@ -3,8 +3,8 @@
 > *Official Prototype Submission for the IEEE OneAquaHealth Global Hackathon 2026*  
 > **"Healthy Waters, Healthy Ecosystems, Healthy Communities"**
 
-[![Backend CI / Pytest](https://img.shields.io/badge/pytest-27%20passed-emerald.svg)](./backend/tests)
-[![Frontend Tests](https://img.shields.io/badge/frontend%20tests-5%20passed-teal.svg)](./frontend/src/tests)
+[![Backend CI / Pytest](https://img.shields.io/badge/pytest-32%20passed-emerald.svg)](./backend/tests)
+[![Frontend Tests](https://img.shields.io/badge/frontend%20tests-9%20passed-teal.svg)](./frontend/src/tests)
 [![Frontend Build](https://img.shields.io/badge/vite-compiled%200%20errors-teal.svg)](./frontend)
 [![HL7 FHIR R4](https://img.shields.io/badge/HL7%20FHIR-R4%20Compliant-blue.svg)](./docs/fhir_implementation_guide.md)
 [![OGC GeoJSON](https://img.shields.io/badge/OGC-GeoJSON%20CRS84-orange.svg)](./backend/app/services/ogc_converter.py)
@@ -18,7 +18,7 @@
 | :--- | :---: | :--- |
 | **Impact & OneAquaHealth Alignment** | **30%** | Explicit mathematical bridge linking freshwater metrics (pH, DO, turbidity, benthic EPT macroinvertebrates) directly to **public health hazard vectors** (waterborne pathogens, *Culex* mosquito breeding in hypoxic pools, cyanobacterial HAB toxins, and contact advisories). Calibrated across official **EU Horizon OneAquaHealth pilot basins** (**Coimbra, Portugal**; **Benevento, Italy**; **Oslo, Norway**) and international benchmarks. |
 | **Innovation & Creativity** | **20%** | **Multi-stage AI Verification Agent** providing real-time contradiction detection (e.g. flagging impossible Plecoptera stonefly reports in hypoxic waters, or "crystal clear" reports with high NTU) paired with explainable reasoning and vision annotation analysis. |
-| **Technical Implementation** | **20%** | Production-ready full-stack monorepo: FastAPI backend, Pydantic schemas, 27 automated pytest tests, React 19 + TypeScript + Tailwind CSS frontend, and Docker Compose reproducibility. |
+| **Technical Implementation** | **20%** | Production-ready full-stack monorepo: FastAPI backend, Pydantic schemas, 32 automated pytest tests, 9 frontend unit tests (41 automated tests total), React 19 + TypeScript + Tailwind CSS frontend, and Docker Compose reproducibility. |
 | **Usability & UX** | **15%** | Track 1 compliant citizen streamkeeper workflow: guided visual counters for bio-indicators, instant validation feedback, interactive geospatial risk map, and plain-language ecological translation. |
 | **Feasibility & Scalability** | **15%** | Standards-compliant Track 7 backend: direct transformation into **HL7 FHIR R4 `Observation` and `RiskAssessment` resources** with standard LOINC codes (appealing to **HL7 Europe & EFMI**), alongside **OGC GeoJSON** for spatial sensor networks. |
 
@@ -86,7 +86,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
-*Run automated backend test suite (27 unit & integration tests):*
+*Run automated backend test suite (32 unit & integration tests):*
 ```bash
 pytest -v
 ```
@@ -97,7 +97,7 @@ cd frontend
 npm install
 npm run dev
 ```
-*Run automated frontend test suite:*
+*Run automated frontend test suite (9 unit tests):*
 ```bash
 npm test
 ```
@@ -110,15 +110,15 @@ Open `http://localhost:5173` in your browser.
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `GET` | `/api/v1/health` | Service health status and loaded station count |
-| `GET` | `/api/v1/streams` | List all stream observation records with optional catchment and advisory filters |
+| `GET` | `/api/v1/streams` | List all stream observation records with optional `catchment`, `advisory`, and `pilot_city` filters |
 | `GET` | `/api/v1/streams/{id}` | Retrieve individual stream profile, readings, and One Health metrics |
 | `POST` | `/api/v1/observations/validate` | Instant AI verification preview for client forms (contradiction detection) |
 | `POST` | `/api/v1/observations` | Ingest official citizen observation, calculate One Health score, and archive |
-| `GET` | `/api/v1/alerts` | Aggregate active municipal and public health early warning triggers |
-| `GET` | `/api/v1/stats` | Watershed summary metrics (Mean One Health, WQI, EHI, EPT taxa, advisories) |
+| `GET` | `/api/v1/alerts` | Aggregate active municipal and public health early warning triggers (supports `?pilot_city=`) |
+| `GET` | `/api/v1/stats` | Watershed summary metrics (Mean One Health, WQI, EHI, EPT taxa, advisories; supports `?pilot_city=`) |
 | `GET` | `/api/v1/fhir/observations/{id}` | Export single stream observation as HL7 FHIR R4 Bundle |
-| `GET` | `/api/v1/fhir/bundle` | Export entire regional dataset as HL7 FHIR R4 Collection Bundle |
-| `GET` | `/api/v1/ogc/geojson` | Export stream monitoring network as standard OGC GeoJSON FeatureCollection |
+| `GET` | `/api/v1/fhir/bundle` | Export regional dataset as HL7 FHIR R4 Collection Bundle (supports `?pilot_city=`) |
+| `GET` | `/api/v1/ogc/geojson` | Export stream monitoring network as standard OGC GeoJSON FeatureCollection (supports `?pilot_city=`) |
 
 ---
 
@@ -144,11 +144,11 @@ Open `http://localhost:5173` in your browser.
 │   │   │   ├── fhir_converter.py    # HL7 FHIR R4 transformation
 │   │   │   ├── ogc_converter.py     # OGC GeoJSON exporter
 │   │   │   ├── onehealth_risk.py    # Public health & vector hazard algorithms
-│   │   │   ├── seed_data.py         # 12 diverse urban stream stations across EU & Global pilots
+│   │   │   ├── seed_data.py         # 30 diverse urban stream stations across 4 EU & International pilot basins
 │   │   │   └── water_quality.py     # WQI, BMWP, FBI, and DO physics
 │   │   ├── config.py
 │   │   └── main.py
-│   ├── tests/                       # 27 automated pytest test cases
+│   ├── tests/                       # 32 automated pytest test cases
 │   ├── requirements.txt
 │   └── Dockerfile
 ├── frontend/

@@ -10,8 +10,12 @@ test('loadScenario resets all parameters cleanly with zero state pollution', () 
     conductivity: 120,
     stoneflies: 5,
     mayflies: 10,
+    freshwaterShrimp: 3,
+    blackflies: 0,
     tubifex: 0,
     bloodworms: 0,
+    leeches: 0,
+    snails: 0,
     trashDensity: 'none'
   };
 
@@ -22,8 +26,12 @@ test('loadScenario resets all parameters cleanly with zero state pollution', () 
     conductivity: 450,
     stoneflies: 0,
     mayflies: 0,
+    freshwaterShrimp: 0,
+    blackflies: 0,
     tubifex: 12,
     bloodworms: 18,
+    leeches: 4,
+    snails: 10,
     trashDensity: 'moderate'
   };
 
@@ -31,12 +39,17 @@ test('loadScenario resets all parameters cleanly with zero state pollution', () 
   let current = { ...algalBloomScenario };
   assert.strictEqual(current.nitrate, 16.0);
   assert.strictEqual(current.phosphate, 0.55);
+  assert.strictEqual(current.leeches, 4);
+  assert.strictEqual(current.snails, 10);
 
   current = { ...cleanScenario };
   assert.strictEqual(current.nitrate, 0.8);
   assert.strictEqual(current.phosphate, 0.02);
+  assert.strictEqual(current.freshwaterShrimp, 3);
   assert.strictEqual(current.tubifex, 0);
   assert.strictEqual(current.stoneflies, 5);
+  assert.strictEqual(current.leeches, 0);
+  assert.strictEqual(current.snails, 0);
   assert.strictEqual(current.trashDensity, 'none');
 });
 

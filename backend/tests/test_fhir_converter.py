@@ -63,3 +63,15 @@ def test_fhir_bundle_structure():
     risk_resource = next(r for r in resources if r["resourceType"] == "RiskAssessment")
     assert "Urban Stream Waterway: Standard Creek" in risk_resource["subject"]["display"]
     assert len(risk_resource["prediction"]) == 3
+
+    # Verify HL7 EU Pilot City extension attached to all resources
+    assert record.pilot_city == "portland"
+    pilot_extensions = [
+        ext["valueString"]
+        for r in resources
+        if "extension" in r
+        for ext in r["extension"]
+        if ext["url"] == "http://hl7.eu/fhir/environmental/StructureDefinition/pilot-city"
+    ]
+    assert len(pilot_extensions) == len(resources)
+    assert all(p == "portland" for p in pilot_extensions)

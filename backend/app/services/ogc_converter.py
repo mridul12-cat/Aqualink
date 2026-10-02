@@ -17,7 +17,7 @@ def convert_to_ogc_geojson_features(records: List[Any]) -> Dict[str, Any]:
                 "station_id": r.station_id,
                 "stream_name": r.stream_name,
                 "catchment_basin": r.catchment_basin,
-                "pilot_city": getattr(r, "pilot_city", "portland"),
+                "pilot_city": getattr(r, "pilot_city", None) or "portland",
                 "timestamp": r.timestamp,
                 "observer": f"{r.observer_name} ({r.observer_tier})",
                 "one_health_score": r.assessment.composite_one_health_score,

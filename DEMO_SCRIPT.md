@@ -34,19 +34,19 @@ Welcome to **AquaLink OneHealth**: an autonomous, end-to-end platform built for 
 ---
 
 ### [0:40 - 1:30] Scene 2: Regional Intelligence Map & One Health Risk Scoring
-*(Visual: Switch to browser at `http://localhost:5173`. Show the Regional Stream Map tab. Mouse hovers over color-coded markers.)*
+*(Visual: Switch to browser at `http://localhost:5173`. Show the Regional Stream Map tab. Mouse hovers over color-coded markers. Demonstrate the pilot dropdown switching seamlessly between Coimbra, Benevento, Oslo, and Portland.)*
 
 **Speaker:**  
-"Here on the regional dashboard, we see a live watershed monitoring network. Each station is evaluated using our **One Health Composite Engine**. 
+"Here on the regional dashboard, we see a live watershed monitoring network spanning 30 stations across 4 pilot basins—including official EU Horizon OneAquaHealth pilots in Coimbra, Benevento, and Oslo, alongside our international reference in Portland. Each station is evaluated using our **One Health Composite Engine**. 
 
 Notice how our pins are color-coded:
-- Green and cyan pins represent resilient, high-integrity reaches like *Silver Creek Headwaters*.
+- Green and cyan pins represent resilient, high-integrity reaches like *Silver Creek Headwaters* or *Coselhas Springs*.
 - Yellow pins indicate stressed baselines.
 - Rose-colored pins flag severe public health or ecological emergencies.
 
 Let’s click on *Willowbrook Urban Slough*. 
 
-*(Visual: Click on station STA-002. The rich Stream Profile Modal opens.)*
+*(Visual: Click on station STA-002 in Portland or PRT-COI-005 in Coimbra. The rich Stream Profile Modal opens, displaying the localized pilot basin flag, station ID, and catchment basin.)*
 
 Instantly, our engine synthesizes raw sensor data into three interconnected One Health pillars:
 1. **Water Quality Index (WQI)**: derived from theoretical dissolved oxygen saturation curves.
@@ -119,7 +119,7 @@ Simultaneously, we expose an **OGC GeoJSON** endpoint for spatial GIS and satell
 *(Visual: Return to the full dashboard overview with all tabs and stats visible.)*
 
 **Speaker:**  
-"AquaLink OneHealth is fully production-ready: built with FastAPI, 32 automated tests (27 backend + 5 frontend), React 19, and single-command Docker Compose reproducibility.
+"AquaLink OneHealth is fully production-ready: built with FastAPI, 41 automated tests (32 backend + 9 frontend), React 19, and single-command Docker Compose reproducibility.
 
 By uniting citizen science, explainable artificial intelligence, and digital health standards, we turn streams into systems—empowering healthy waters, healthy ecosystems, and healthy communities.
 

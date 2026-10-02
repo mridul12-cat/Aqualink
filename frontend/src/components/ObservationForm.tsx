@@ -105,6 +105,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
   const [stoneflies, setStoneflies] = useState<number>(4);
   const [mayflies, setMayflies] = useState<number>(8);
   const [caddisflies, setCaddisflies] = useState<number>(6);
+  const [freshwaterShrimp, setFreshwaterShrimp] = useState<number>(2);
   const [dragonflies, setDragonflies] = useState<number>(2);
   const [beetles, setBeetles] = useState<number>(3);
   const [blackflies, setBlackflies] = useState<number>(0);
@@ -125,7 +126,6 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
   const [trashDensity, setTrashDensity] = useState<TrashDensity>('low');
 
   // Photo
-  const [photoSample, setPhotoSample] = useState<string>('clear_stream');
   const [photoDescription, setPhotoDescription] = useState<string>('Clear rocky substrate with moderate ripple flow');
 
   // AI Validation State
@@ -158,7 +158,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
       stonefly_nymphs: Number(stoneflies),
       mayfly_nymphs: Number(mayflies),
       caddisfly_larvae: Number(caddisflies),
-      freshwater_shrimp: 2,
+      freshwater_shrimp: Number(freshwaterShrimp),
       dragonfly_nymphs: Number(dragonflies),
       beetle_larvae: Number(beetles),
       blackfly_larvae: Number(blackflies),
@@ -203,9 +203,11 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
       clearTimeout(timeoutId);
     };
   }, [
-    streamName, catchmentBasin, tempC, ph, doMgL, turbidityNtu, conductivity,
-    nitrate, phosphate, stoneflies, mayflies, caddisflies, tubifex, bloodworms,
-    clarity, odor, sheen, flowRate, recentRain, algalCover, deadFish, photoDescription
+    streamName, catchmentBasin, pilotCity, latitude, longitude,
+    tempC, ph, doMgL, turbidityNtu, conductivity, nitrate, phosphate,
+    stoneflies, mayflies, caddisflies, freshwaterShrimp, dragonflies, beetles, blackflies,
+    tubifex, bloodworms, leeches, snails, algalCover, deadFish, liveFish,
+    clarity, odor, sheen, flowRate, recentRain, trashDensity, photoDescription
   ]);
 
   // Handle Preset Quick Scenarios
@@ -223,6 +225,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
       setStoneflies(5);
       setMayflies(10);
       setCaddisflies(8);
+      setFreshwaterShrimp(3);
       setDragonflies(2);
       setBeetles(3);
       setBlackflies(0);
@@ -252,6 +255,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
       setStoneflies(6); // CONTRADICTION: Stoneflies in hypoxic water
       setMayflies(8);
       setCaddisflies(0);
+      setFreshwaterShrimp(0);
       setDragonflies(0);
       setBeetles(0);
       setBlackflies(2);
@@ -281,6 +285,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
       setStoneflies(0);
       setMayflies(0);
       setCaddisflies(0);
+      setFreshwaterShrimp(0);
       setDragonflies(0);
       setBeetles(1);
       setBlackflies(0);
@@ -310,6 +315,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
       setStoneflies(0);
       setMayflies(0);
       setCaddisflies(0);
+      setFreshwaterShrimp(0);
       setDragonflies(1);
       setBeetles(0);
       setBlackflies(0);
@@ -669,7 +675,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
               <span className="text-[11px] font-semibold text-emerald-400 block mb-2">
                 Group 1: Pollution-Sensitive Organisms (Clean Water Indicators)
               </span>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="bg-slate-950 border border-slate-800 p-2.5 rounded-lg text-center">
                   <span className="text-[11px] font-medium text-slate-300 block">Stonefly Nymphs</span>
                   <span className="text-[9px] text-slate-400 block mb-1.5">Needs DO &gt; 6.5 mg/L</span>
@@ -723,6 +729,24 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
                     >+</button>
                   </div>
                 </div>
+
+                <div className="bg-slate-950 border border-slate-800 p-2.5 rounded-lg text-center">
+                  <span className="text-[11px] font-medium text-slate-300 block">Freshwater Shrimp</span>
+                  <span className="text-[9px] text-slate-400 block mb-1.5">Gammarus (DO &gt; 5)</span>
+                  <div className="flex items-center justify-center space-x-2">
+                    <button
+                      type="button"
+                      onClick={() => setFreshwaterShrimp(Math.max(0, freshwaterShrimp - 1))}
+                      className="w-6 h-6 rounded bg-slate-800 text-white font-bold text-xs"
+                    >-</button>
+                    <span className="font-mono font-bold text-sm text-teal-300">{freshwaterShrimp}</span>
+                    <button
+                      type="button"
+                      onClick={() => setFreshwaterShrimp(freshwaterShrimp + 1)}
+                      className="w-6 h-6 rounded bg-slate-800 text-white font-bold text-xs"
+                    >+</button>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -730,9 +754,9 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <span className="text-[11px] font-semibold text-amber-400 block mb-2">
-                  Group 2: Moderately Tolerant
+                  Group 2: Moderately Tolerant Organisms
                 </span>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   <div className="bg-slate-950 border border-slate-800 p-2 rounded-lg text-center">
                     <span className="text-[11px] text-slate-300 block">Dragonflies</span>
                     <div className="flex items-center justify-center space-x-2 mt-1">
@@ -749,6 +773,14 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
                       <button type="button" onClick={() => setBeetles(beetles + 1)} className="w-5 h-5 bg-slate-800 rounded text-xs">+</button>
                     </div>
                   </div>
+                  <div className="bg-slate-950 border border-slate-800 p-2 rounded-lg text-center">
+                    <span className="text-[11px] text-slate-300 block">Blackflies</span>
+                    <div className="flex items-center justify-center space-x-2 mt-1">
+                      <button type="button" onClick={() => setBlackflies(Math.max(0, blackflies - 1))} className="w-5 h-5 bg-slate-800 rounded text-xs">-</button>
+                      <span className="font-mono font-bold text-xs text-amber-300">{blackflies}</span>
+                      <button type="button" onClick={() => setBlackflies(blackflies + 1)} className="w-5 h-5 bg-slate-800 rounded text-xs">+</button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -756,7 +788,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
                 <span className="text-[11px] font-semibold text-rose-400 block mb-2">
                   Group 3: Pollution-Tolerant (Sludge/Organic)
                 </span>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   <div className="bg-slate-950 border border-slate-800 p-2 rounded-lg text-center">
                     <span className="text-[11px] text-slate-300 block">Tubifex Worms</span>
                     <div className="flex items-center justify-center space-x-2 mt-1">
@@ -766,11 +798,27 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
                     </div>
                   </div>
                   <div className="bg-slate-950 border border-slate-800 p-2 rounded-lg text-center">
-                    <span className="text-[11px] text-slate-300 block">Bloodworms (Midges)</span>
+                    <span className="text-[11px] text-slate-300 block">Bloodworms</span>
                     <div className="flex items-center justify-center space-x-2 mt-1">
                       <button type="button" onClick={() => setBloodworms(Math.max(0, bloodworms - 1))} className="w-5 h-5 bg-slate-800 rounded text-xs">-</button>
                       <span className="font-mono font-bold text-xs text-rose-400">{bloodworms}</span>
                       <button type="button" onClick={() => setBloodworms(bloodworms + 1)} className="w-5 h-5 bg-slate-800 rounded text-xs">+</button>
+                    </div>
+                  </div>
+                  <div className="bg-slate-950 border border-slate-800 p-2 rounded-lg text-center">
+                    <span className="text-[11px] text-slate-300 block">Leeches</span>
+                    <div className="flex items-center justify-center space-x-2 mt-1">
+                      <button type="button" onClick={() => setLeeches(Math.max(0, leeches - 1))} className="w-5 h-5 bg-slate-800 rounded text-xs">-</button>
+                      <span className="font-mono font-bold text-xs text-rose-400">{leeches}</span>
+                      <button type="button" onClick={() => setLeeches(leeches + 1)} className="w-5 h-5 bg-slate-800 rounded text-xs">+</button>
+                    </div>
+                  </div>
+                  <div className="bg-slate-950 border border-slate-800 p-2 rounded-lg text-center">
+                    <span className="text-[11px] text-slate-300 block">Pouch Snails</span>
+                    <div className="flex items-center justify-center space-x-2 mt-1">
+                      <button type="button" onClick={() => setSnails(Math.max(0, snails - 1))} className="w-5 h-5 bg-slate-800 rounded text-xs">-</button>
+                      <span className="font-mono font-bold text-xs text-rose-400">{snails}</span>
+                      <button type="button" onClick={() => setSnails(snails + 1)} className="w-5 h-5 bg-slate-800 rounded text-xs">+</button>
                     </div>
                   </div>
                 </div>
