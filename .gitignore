@@ -1,0 +1,15 @@
+# Environments & Dependencies
+backend/venv/
+node_modules/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Build Artifacts
+frontend/dist/
+*.log
+
+# System files
+.DS_Store
+.env
