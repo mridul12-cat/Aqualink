@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { fetchFhirBundle, fetchOgcGeoJson } from '../services/api';
-import { FileCode2, Copy, Check, Download, Layers, ShieldCheck, ExternalLink, RefreshCw, Cpu } from 'lucide-react';
+import { PilotCityId, PILOT_BASINS } from '../types';
+import { FileCode2, Copy, Check, Download, Layers, ShieldCheck, ExternalLink, RefreshCw, Cpu, Globe2 } from 'lucide-react';
 
-export const InteropModal: React.FC = () => {
+interface InteropModalProps {
+  selectedPilot?: PilotCityId;
+}
+
+export const InteropModal: React.FC<InteropModalProps> = ({ selectedPilot = 'all' }) => {
   const [activeTab, setActiveTab] = useState<'fhir' | 'ogc' | 'loinc'>('fhir');
   const [fhirData, setFhirData] = useState<any>(null);
   const [ogcData, setOgcData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  const currentBasin = PILOT_BASINS[selectedPilot || 'all'] || PILOT_BASINS.all;
 
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const [fhir, ogc] = await Promise.all([fetchFhirBundle(), fetchOgcGeoJson()]);
+      const [fhir, ogc] = await Promise.all([
+        fetchFhirBundle(selectedPilot),
+        fetchOgcGeoJson(selectedPilot)
+      ]);
       setFhirData(fhir);
       setOgcData(ogc);
     } catch (err) {
@@ -25,6 +31,10 @@ export const InteropModal: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadData();
+  }, [selectedPilot]);
 
   const handleCopy = (content: any) => {
     navigator.clipboard.writeText(JSON.stringify(content, null, 2));
@@ -61,6 +71,11 @@ export const InteropModal: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-teal-500/10 border border-teal-500/20 text-teal-300 text-xs font-semibold">
+              <span>{currentBasin.flag}</span>
+              <span className="font-bold text-white">{currentBasin.city}</span>
+              <span className="text-[10px] text-teal-400 font-mono hidden sm:inline">[{currentBasin.badge}]</span>
+            </div>
             <button
               onClick={loadData}
               disabled={isLoading}

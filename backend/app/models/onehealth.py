@@ -88,6 +88,7 @@ class StreamObservationRecord(BaseModel):
     latitude: float
     longitude: float
     catchment_basin: str
+    pilot_city: str = "portland"
     timestamp: str
     observer_name: str
     observer_tier: str

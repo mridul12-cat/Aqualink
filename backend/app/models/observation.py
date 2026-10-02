@@ -84,6 +84,7 @@ class CitizenObservationCreate(BaseModel):
     latitude: float = Field(..., ge=-90.0, le=90.0)
     longitude: float = Field(..., ge=-180.0, le=180.0)
     catchment_basin: str
+    pilot_city: Optional[str] = None
     observer_name: str = "Anonymous Volunteer"
     observer_tier: str = "Citizen Volunteer"
     notes: Optional[str] = None

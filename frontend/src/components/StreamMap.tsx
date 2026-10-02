@@ -1,14 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
-import { StreamObservationRecord } from '../types';
-import { Search, Filter, Layers, Info, AlertTriangle, ShieldCheck, Waves, ExternalLink } from 'lucide-react';
+import { StreamObservationRecord, PilotCityId, PILOT_BASINS, EarlyWarningAlert } from '../types';
+import { Search, Filter, Layers, Info, AlertTriangle, ShieldCheck, Waves, ExternalLink, Globe2 } from 'lucide-react';
 
 interface StreamMapProps {
   streams: StreamObservationRecord[];
   onSelectStream: (stream: StreamObservationRecord) => void;
+  selectedPilot?: PilotCityId;
+  alerts?: EarlyWarningAlert[];
 }
 
-export const StreamMap: React.FC<StreamMapProps> = ({ streams, onSelectStream }) => {
+export const StreamMap: React.FC<StreamMapProps> = ({
+  streams,
+  onSelectStream,
+  selectedPilot = 'coimbra',
+  alerts = []
+}) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.LayerGroup | null>(null);
@@ -16,6 +23,8 @@ export const StreamMap: React.FC<StreamMapProps> = ({ streams, onSelectStream })
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCatchment, setSelectedCatchment] = useState<string>('all');
   const [selectedAdvisory, setSelectedAdvisory] = useState<string>('all');
+
+  const currentBasin = PILOT_BASINS[selectedPilot || 'coimbra'] || PILOT_BASINS.coimbra;
 
   // Extract unique catchments
   const catchments = Array.from(new Set(streams.map((s) => s.catchment_basin))).sort();
@@ -38,10 +47,11 @@ export const StreamMap: React.FC<StreamMapProps> = ({ streams, onSelectStream })
   useEffect(() => {
     if (!mapContainerRef.current || mapInstanceRef.current) return;
 
-    // Centered around Portland urban watershed region (lat: ~45.50, lng: -122.65)
+    const initialBasin = PILOT_BASINS[selectedPilot || 'coimbra'] || PILOT_BASINS.coimbra;
+
     const map = L.map(mapContainerRef.current, {
-      center: [45.50, -122.66],
-      zoom: 12,
+      center: initialBasin.center,
+      zoom: initialBasin.zoom,
       zoomControl: true,
     });
 
@@ -74,13 +84,38 @@ export const StreamMap: React.FC<StreamMapProps> = ({ streams, onSelectStream })
     markersRef.current = markersGroup;
     mapInstanceRef.current = map;
 
+    // Ensure Leaflet recalculates dimensions once mounted
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 150);
+
     return () => {
       map.remove();
       mapInstanceRef.current = null;
     };
   }, []);
 
-  // Update Markers when filteredStreams changes
+  // Dynamically pan and fit bounds when selectedPilot changes
+  useEffect(() => {
+    if (!mapInstanceRef.current) return;
+    // Close any active popup to prevent DOM reference leaks during animation
+    try {
+      mapInstanceRef.current.closePopup();
+    } catch (e) {
+      // ignore
+    }
+    const basin = PILOT_BASINS[selectedPilot || 'all'];
+    if (basin) {
+      mapInstanceRef.current.flyTo(basin.center, basin.zoom, {
+        duration: 1.4,
+        easeLinearity: 0.25,
+      });
+    }
+    setSelectedCatchment('all');
+    setSearchQuery('');
+  }, [selectedPilot]);
+
+  // Update Markers and Alert Pins when filteredStreams or alerts change
   useEffect(() => {
     if (!mapInstanceRef.current || !markersRef.current) return;
 
@@ -89,6 +124,12 @@ export const StreamMap: React.FC<StreamMapProps> = ({ streams, onSelectStream })
     filteredStreams.forEach((stream) => {
       const score = stream.assessment.composite_one_health_score;
       const advisory = stream.assessment.public_health_hazards.recreational_advisory;
+
+      const streamAlerts = (stream.assessment.early_warning_alerts || []).concat(
+        alerts.filter((a) => a.stream_id === stream.id).map((a) => a.alert)
+      );
+      const uniqueAlerts = Array.from(new Set(streamAlerts));
+      const hasAlert = uniqueAlerts.length > 0;
 
       // Color coding based on One Health score & advisory
       let markerColor = '#10b981'; // Green
@@ -100,24 +141,59 @@ export const StreamMap: React.FC<StreamMapProps> = ({ streams, onSelectStream })
         markerColor = '#06b6d4'; // Cyan
       }
 
+      const alertPingHtml = hasAlert ? `
+        <span style="
+          position: absolute;
+          inset: -5px;
+          border-radius: 50%;
+          background: #f43f5e;
+          opacity: 0.6;
+          animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+          pointer-events: none;
+        "></span>
+        <span style="
+          position: absolute;
+          top: -6px;
+          right: -6px;
+          background: #ef4444;
+          color: white;
+          border-radius: 50%;
+          width: 16px;
+          height: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 10px;
+          font-weight: 900;
+          border: 2px solid #0f172a;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+          z-index: 20;
+        ">!</span>
+      ` : '';
+
       const customIcon = L.divIcon({
         className: 'custom-stream-pin',
         html: `
-          <div style="
-            background-color: ${markerColor};
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid #ffffff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            font-weight: 800;
-            font-size: 11px;
-            color: #0f172a;
-          ">
-            ${Math.round(score)}
+          <div style="position: relative; width: 32px; height: 32px;">
+            ${alertPingHtml}
+            <div style="
+              background-color: ${markerColor};
+              width: 32px;
+              height: 32px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border: 2px solid #ffffff;
+              box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+              font-weight: 800;
+              font-size: 11px;
+              color: #0f172a;
+              position: relative;
+              z-index: 10;
+            ">
+              ${Math.round(score)}
+            </div>
           </div>
         `,
         iconSize: [32, 32],
@@ -138,6 +214,16 @@ export const StreamMap: React.FC<StreamMapProps> = ({ streams, onSelectStream })
           </div>
           <h3 style="font-size: 14px; font-weight: 700; color: #f8fafc; margin: 0 0 4px 0;">${stream.stream_name}</h3>
           <p style="font-size: 11px; color: #94a3b8; margin: 0 0 8px 0;">${stream.catchment_basin}</p>
+
+          ${hasAlert ? `
+            <div style="background: rgba(225, 29, 72, 0.15); border: 1px solid rgba(244, 63, 94, 0.5); border-radius: 6px; padding: 6px 8px; margin-bottom: 8px;">
+              <div style="font-size: 10px; font-weight: 800; color: #fb7185; display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
+                ⚠️ ACTIVE EARLY WARNING DIRECTIVE
+              </div>
+              ${uniqueAlerts.map(a => `<div style="font-size: 10px; color: #fecdd3; line-height: 1.3;">• ${a}</div>`).join('')}
+            </div>
+          ` : ''}
+
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 11px; margin-bottom: 8px;">
             <div style="background: #1e293b; padding: 4px 8px; border-radius: 6px;">
               <span style="color: #64748b;">One Health:</span> <strong style="color: #38bdf8;">${score}/100</strong>
@@ -178,7 +264,7 @@ export const StreamMap: React.FC<StreamMapProps> = ({ streams, onSelectStream })
 
       markersRef.current?.addLayer(marker);
     });
-  }, [filteredStreams, onSelectStream]);
+  }, [filteredStreams, onSelectStream, alerts]);
 
   const handleFocusStream = (stream: StreamObservationRecord) => {
     if (mapInstanceRef.current) {
@@ -194,8 +280,17 @@ export const StreamMap: React.FC<StreamMapProps> = ({ streams, onSelectStream })
       {/* Map Filter Controls Bar */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 shadow-sm">
         
+        {/* Pilot Basin Badge */}
+        <div className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-teal-500/10 border border-teal-500/20 text-teal-300 text-xs font-semibold">
+          <span className="text-base">{currentBasin.flag}</span>
+          <div>
+            <span className="font-bold text-white">{currentBasin.city}</span>
+            <span className="text-slate-400 text-[11px] ml-1.5 hidden md:inline">({currentBasin.basinName})</span>
+          </div>
+        </div>
+
         {/* Search */}
-        <div className="relative flex-1 min-w-[220px]">
+        <div className="relative flex-1 min-w-[200px]">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
           <input
             type="text"
@@ -214,7 +309,7 @@ export const StreamMap: React.FC<StreamMapProps> = ({ streams, onSelectStream })
             onChange={(e) => setSelectedCatchment(e.target.value)}
             className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-teal-500"
           >
-            <option value="all">All Catchment Basins</option>
+            <option value="all">All Catchments ({currentBasin.city})</option>
             {catchments.map((c) => (
               <option key={c} value={c}>
                 {c}
@@ -269,6 +364,10 @@ export const StreamMap: React.FC<StreamMapProps> = ({ streams, onSelectStream })
             <div className="flex items-center space-x-2">
               <span className="w-3 h-3 rounded-full bg-rose-500" />
               <span className="text-slate-300">&lt; 45: Degraded / Hazardous (Unsafe)</span>
+            </div>
+            <div className="flex items-center space-x-2 pt-1 border-t border-slate-800">
+              <span className="w-3.5 h-3.5 rounded-full bg-rose-500 flex items-center justify-center text-[9px] font-bold text-white shadow-sm ring-1 ring-rose-400">!</span>
+              <span className="text-rose-300 font-semibold">Active Early Warning Alert Pin</span>
             </div>
           </div>
         </div>

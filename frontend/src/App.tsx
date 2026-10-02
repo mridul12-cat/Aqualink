@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StreamObservationRecord, WatershedStats, EarlyWarningAlert } from './types';
+import { StreamObservationRecord, WatershedStats, EarlyWarningAlert, PilotCityId } from './types';
 import { fetchStreams, fetchStats, fetchAlerts } from './services/api';
 import { Navbar } from './components/Navbar';
 import { StatsOverview } from './components/StatsOverview';
@@ -13,6 +13,7 @@ import { Waves, Loader2, RefreshCw } from 'lucide-react';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<'map' | 'form' | 'alerts' | 'analytics' | 'standards'>('map');
+  const [selectedPilot, setSelectedPilot] = useState<PilotCityId>('coimbra');
   const [streams, setStreams] = useState<StreamObservationRecord[]>([]);
   const [stats, setStats] = useState<WatershedStats | null>(null);
   const [alerts, setAlerts] = useState<EarlyWarningAlert[]>([]);
@@ -20,14 +21,14 @@ export function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadData = async () => {
+  const loadData = async (pilot: PilotCityId = selectedPilot) => {
     setIsLoading(true);
     setError(null);
     try {
       const [streamsData, statsData, alertsData] = await Promise.all([
-        fetchStreams(),
-        fetchStats(),
-        fetchAlerts(),
+        fetchStreams(undefined, undefined, undefined, pilot),
+        fetchStats(pilot),
+        fetchAlerts(pilot),
       ]);
       setStreams(streamsData);
       setStats(statsData);
@@ -41,14 +42,14 @@ export function App() {
   };
 
   useEffect(() => {
-    loadData();
-  }, []);
+    loadData(selectedPilot);
+  }, [selectedPilot]);
 
   const handleObservationAdded = (newRecord: StreamObservationRecord) => {
     setStreams((prev) => [newRecord, ...prev]);
-    // Refresh stats & alerts
-    fetchStats().then(setStats).catch(console.error);
-    fetchAlerts().then((res) => setAlerts(res.alerts)).catch(console.error);
+    // Refresh stats & alerts for current pilot
+    fetchStats(selectedPilot).then(setStats).catch(console.error);
+    fetchAlerts(selectedPilot).then((res) => setAlerts(res.alerts)).catch(console.error);
   };
 
   return (
@@ -59,6 +60,8 @@ export function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         alertCount={alerts.length}
+        selectedPilot={selectedPilot}
+        onSelectPilot={setSelectedPilot}
       />
 
       {/* Main Container */}
@@ -69,7 +72,7 @@ export function App() {
           <div className="mb-6 p-4 rounded-xl bg-rose-950/40 border border-rose-500/40 flex items-center justify-between">
             <span className="text-xs text-rose-300 font-semibold">{error}</span>
             <button
-              onClick={loadData}
+              onClick={() => loadData(selectedPilot)}
               className="px-3 py-1 rounded bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center space-x-1"
             >
               <RefreshCw className="w-3 h-3" />
@@ -95,6 +98,8 @@ export function App() {
               <StreamMap
                 streams={streams}
                 onSelectStream={(s) => setSelectedStream(s)}
+                selectedPilot={selectedPilot}
+                alerts={alerts}
               />
             )}
 
@@ -102,6 +107,7 @@ export function App() {
               <ObservationForm
                 onObservationAdded={handleObservationAdded}
                 onViewRecord={(rec) => setSelectedStream(rec)}
+                activePilot={selectedPilot}
               />
             )}
 
@@ -121,7 +127,7 @@ export function App() {
             )}
 
             {activeTab === 'standards' && (
-              <InteropModal />
+              <InteropModal selectedPilot={selectedPilot} />
             )}
           </>
         )}

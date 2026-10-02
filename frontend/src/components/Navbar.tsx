@@ -1,20 +1,31 @@
 import React from 'react';
-import { Activity, MapPin, PlusCircle, AlertTriangle, BarChart3, FileCode2, Waves } from 'lucide-react';
+import { Activity, MapPin, PlusCircle, AlertTriangle, BarChart3, FileCode2, Waves, Globe2 } from 'lucide-react';
+import { PilotCityId, PILOT_BASINS } from '../types';
 
 interface NavbarProps {
   activeTab: 'map' | 'form' | 'alerts' | 'analytics' | 'standards';
   setActiveTab: (tab: 'map' | 'form' | 'alerts' | 'analytics' | 'standards') => void;
   alertCount: number;
+  selectedPilot: PilotCityId;
+  onSelectPilot: (pilot: PilotCityId) => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, alertCount }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  activeTab,
+  setActiveTab,
+  alertCount,
+  selectedPilot,
+  onSelectPilot
+}) => {
+  const currentBasin = PILOT_BASINS[selectedPilot] || PILOT_BASINS.coimbra;
+
   return (
     <header className="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 gap-2">
           
           {/* Brand Logo & Mission */}
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setActiveTab('map')}>
+          <div className="flex items-center space-x-3 cursor-pointer shrink-0" onClick={() => setActiveTab('map')}>
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-teal-500/20 ring-1 ring-teal-400/30">
               <Waves className="w-6 h-6 text-slate-950" />
             </div>
@@ -28,10 +39,46 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, alertCo
                   IEEE Hackathon
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 hidden sm:block">
+              <p className="text-[11px] text-slate-400 hidden xl:block">
                 From Streams to Systems: Citizen Science to One Health Intelligence
               </p>
             </div>
+          </div>
+
+          {/* Watershed / Pilot City Selector Dropdown */}
+          <div className="flex items-center space-x-2 bg-slate-950/80 border border-teal-500/30 hover:border-teal-400/60 rounded-xl px-2.5 py-1.5 transition-all shadow-inner">
+            <Globe2 className="w-4 h-4 text-teal-400 shrink-0" />
+            <div className="flex flex-col">
+              <span className="text-[9px] uppercase tracking-wider font-extrabold text-teal-400/90 leading-none">
+                Pilot Watershed:
+              </span>
+              <select
+                id="watershed-pilot-selector"
+                value={selectedPilot}
+                onChange={(e) => onSelectPilot(e.target.value as PilotCityId)}
+                aria-label="Select River Basin / Pilot City"
+                className="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer pr-1 py-0.5"
+              >
+                <option value="coimbra" className="bg-slate-900 text-slate-100">
+                  🇵🇹 Coimbra, Portugal (Mondego River Basin / Ribeira de Coselhas) [Primary EU Pilot]
+                </option>
+                <option value="benevento" className="bg-slate-900 text-slate-100">
+                  🇮🇹 Benevento, Italy (Calore River / Sabato River Basin) [EU Pilot]
+                </option>
+                <option value="oslo" className="bg-slate-900 text-slate-100">
+                  🇳🇴 Oslo, Norway (Akerselva / Alna River Basin) [EU Pilot]
+                </option>
+                <option value="portland" className="bg-slate-900 text-slate-100">
+                  🇺🇸 Portland, USA (Columbia Slough / Lower Willamette Basin) [US Case Study]
+                </option>
+                <option value="all" className="bg-slate-900 text-slate-100">
+                  🌍 All Basins (Global OneAquaHealth Network)
+                </option>
+              </select>
+            </div>
+            <span className="hidden lg:inline-flex text-[10px] font-semibold px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-300 border border-teal-500/30 whitespace-nowrap">
+              {currentBasin.badge}
+            </span>
           </div>
 
           {/* Navigation Tabs */}

@@ -29,11 +29,17 @@ export async function fetchHealth() {
   return res.json();
 }
 
-export async function fetchStreams(catchment?: string, advisory?: string, minScore?: number): Promise<StreamObservationRecord[]> {
+export async function fetchStreams(
+  catchment?: string,
+  advisory?: string,
+  minScore?: number,
+  pilotCity?: string
+): Promise<StreamObservationRecord[]> {
   const params = new URLSearchParams();
-  if (catchment) params.append('catchment', catchment);
-  if (advisory) params.append('advisory', advisory);
+  if (catchment && catchment !== 'all') params.append('catchment', catchment);
+  if (advisory && advisory !== 'all') params.append('advisory', advisory);
   if (minScore !== undefined) params.append('min_score', minScore.toString());
+  if (pilotCity && pilotCity !== 'all') params.append('pilot_city', pilotCity);
 
   const url = `${API_BASE}/streams${params.toString() ? `?${params.toString()}` : ''}`;
   const res = await fetch(url);
@@ -67,32 +73,49 @@ export async function submitObservation(data: CitizenObservationCreate): Promise
   return res.json();
 }
 
-export async function fetchAlerts(): Promise<{ total_active_alerts: number; alerts: EarlyWarningAlert[] }> {
-  const res = await fetch(`${API_BASE}/alerts`);
+export async function fetchAlerts(pilotCity?: string): Promise<{ total_active_alerts: number; alerts: EarlyWarningAlert[] }> {
+  const params = new URLSearchParams();
+  if (pilotCity && pilotCity !== 'all') params.append('pilot_city', pilotCity);
+
+  const url = `${API_BASE}/alerts${params.toString() ? `?${params.toString()}` : ''}`;
+  const res = await fetch(url);
   if (!res.ok) throw new Error('Failed to fetch alerts');
   return res.json();
 }
 
-export async function fetchStats(): Promise<WatershedStats> {
-  const res = await fetch(`${API_BASE}/stats`);
+export async function fetchStats(pilotCity?: string): Promise<WatershedStats> {
+  const params = new URLSearchParams();
+  if (pilotCity && pilotCity !== 'all') params.append('pilot_city', pilotCity);
+
+  const url = `${API_BASE}/stats${params.toString() ? `?${params.toString()}` : ''}`;
+  const res = await fetch(url);
   if (!res.ok) throw new Error('Failed to fetch statistics');
   return res.json();
 }
 
-export async function fetchFhirBundle(): Promise<any> {
-  const res = await fetch(`${API_BASE}/fhir/bundle`);
+export async function fetchFhirBundle(pilotCity?: string): Promise<any> {
+  const params = new URLSearchParams();
+  if (pilotCity && pilotCity !== 'all') params.append('pilot_city', pilotCity);
+
+  const url = `${API_BASE}/fhir/bundle${params.toString() ? `?${params.toString()}` : ''}`;
+  const res = await fetch(url);
   if (!res.ok) throw new Error('Failed to fetch FHIR bundle');
   return res.json();
 }
 
 export async function fetchSingleFhir(recordId: string): Promise<any> {
   const res = await fetch(`${API_BASE}/fhir/observations/${recordId}`);
-  if (!res.ok) throw new Error('Failed to fetch FHIR record');
+  if (!res.ok) throw new Error(`Failed to fetch FHIR record`);
   return res.json();
 }
 
-export async function fetchOgcGeoJson(): Promise<any> {
-  const res = await fetch(`${API_BASE}/ogc/geojson`);
+export async function fetchOgcGeoJson(pilotCity?: string): Promise<any> {
+  const params = new URLSearchParams();
+  if (pilotCity && pilotCity !== 'all') params.append('pilot_city', pilotCity);
+
+  const url = `${API_BASE}/ogc/geojson${params.toString() ? `?${params.toString()}` : ''}`;
+  const res = await fetch(url);
   if (!res.ok) throw new Error('Failed to fetch OGC GeoJSON');
   return res.json();
 }
+

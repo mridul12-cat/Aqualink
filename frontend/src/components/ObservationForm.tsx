@@ -7,7 +7,8 @@ import {
   WaterOdor,
   SurfaceSheen,
   FlowRate,
-  TrashDensity
+  TrashDensity,
+  PilotCityId
 } from '../types';
 import { validateObservationDraft, submitObservation } from '../services/api';
 import {
@@ -23,23 +24,73 @@ import {
   Send,
   Loader2,
   Check,
-  RefreshCw
+  RefreshCw,
+  Globe2
 } from 'lucide-react';
 
 interface ObservationFormProps {
   onObservationAdded: (newRecord: StreamObservationRecord) => void;
   onViewRecord: (record: StreamObservationRecord) => void;
+  activePilot?: PilotCityId;
 }
 
-export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationAdded, onViewRecord }) => {
+export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationAdded, onViewRecord, activePilot = 'coimbra' }) => {
+  const initialCity = activePilot !== 'all' ? activePilot : 'coimbra';
   // Form State
-  const [streamName, setStreamName] = useState('Columbia Slough Tributary');
-  const [catchmentBasin, setCatchmentBasin] = useState('Lower Columbia Watershed');
+  const [pilotCity, setPilotCity] = useState<string>(initialCity);
+  const [streamName, setStreamName] = useState(
+    initialCity === 'coimbra' ? 'Ribeira de Coselhas Tributary' :
+    initialCity === 'benevento' ? 'Fiume Calore Tributary' :
+    initialCity === 'oslo' ? 'Akerselva Urban Stream' : 'Columbia Slough Tributary'
+  );
+  const [catchmentBasin, setCatchmentBasin] = useState(
+    initialCity === 'coimbra' ? 'Ribeira de Coselhas / Mondego Basin' :
+    initialCity === 'benevento' ? 'Calore River Urban Reach' :
+    initialCity === 'oslo' ? 'Akerselva Basin' : 'Lower Columbia Watershed'
+  );
   const [observerName, setObserverName] = useState('Alex Rivera');
   const [observerTier, setObserverTier] = useState('Citizen Volunteer');
-  const [latitude, setLatitude] = useState(45.515);
-  const [longitude, setLongitude] = useState(-122.652);
+  const [latitude, setLatitude] = useState(
+    initialCity === 'coimbra' ? 40.2285 :
+    initialCity === 'benevento' ? 41.1320 :
+    initialCity === 'oslo' ? 59.9320 : 45.5150
+  );
+  const [longitude, setLongitude] = useState(
+    initialCity === 'coimbra' ? -8.4280 :
+    initialCity === 'benevento' ? 14.7730 :
+    initialCity === 'oslo' ? 10.7720 : -122.6520
+  );
   const [notes, setNotes] = useState('Observed after morning rain; water flow moderate.');
+
+  const handlePilotChange = (newPilot: string) => {
+    setPilotCity(newPilot);
+    if (newPilot === 'coimbra') {
+      setStreamName('Ribeira de Coselhas Tributary');
+      setCatchmentBasin('Ribeira de Coselhas / Mondego Basin');
+      setLatitude(40.2285);
+      setLongitude(-8.4280);
+    } else if (newPilot === 'benevento') {
+      setStreamName('Fiume Calore Tributary');
+      setCatchmentBasin('Calore River Urban Reach');
+      setLatitude(41.1320);
+      setLongitude(14.7730);
+    } else if (newPilot === 'oslo') {
+      setStreamName('Akerselva Urban Stream');
+      setCatchmentBasin('Akerselva Basin');
+      setLatitude(59.9320);
+      setLongitude(10.7720);
+    } else {
+      setStreamName('Columbia Slough Tributary');
+      setCatchmentBasin('Lower Columbia Watershed');
+      setLatitude(45.5150);
+      setLongitude(-122.6520);
+    }
+  };
+
+  useEffect(() => {
+    const city = activePilot && activePilot !== 'all' ? activePilot : 'coimbra';
+    handlePilotChange(city);
+  }, [activePilot]);
 
   // Physical-chemical
   const [tempC, setTempC] = useState<number>(16.5);
@@ -88,6 +139,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
   const currentPayload: CitizenObservationCreate = {
     stream_name: streamName,
     catchment_basin: catchmentBasin,
+    pilot_city: pilotCity,
     observer_name: observerName,
     observer_tier: observerTier,
     latitude: Number(latitude),
@@ -394,6 +446,22 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
+                <label className="block text-[11px] font-medium text-slate-400 mb-1 flex items-center space-x-1">
+                  <Globe2 className="w-3.5 h-3.5 text-teal-400" />
+                  <span>Target Pilot Watershed</span>
+                </label>
+                <select
+                  value={pilotCity}
+                  onChange={(e) => handlePilotChange(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-teal-300 font-semibold focus:outline-none focus:border-teal-500"
+                >
+                  <option value="coimbra">🇵🇹 Coimbra, Portugal (Mondego / Coselhas) [Primary EU Pilot]</option>
+                  <option value="benevento">🇮🇹 Benevento, Italy (Calore / Sabato) [EU Pilot]</option>
+                  <option value="oslo">🇳🇴 Oslo, Norway (Akerselva / Alna) [EU Pilot]</option>
+                  <option value="portland">🇺🇸 Portland, USA (Columbia Slough / Willamette) [US Case Study]</option>
+                </select>
+              </div>
+              <div>
                 <label className="block text-[11px] font-medium text-slate-400 mb-1">Stream Name</label>
                 <input
                   type="text"
@@ -434,6 +502,30 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
                   <option value="Trained Streamkeeper">Trained Streamkeeper</option>
                   <option value="Field Biologist">Field Biologist / Academic</option>
                 </select>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-[11px] font-medium text-slate-400 mb-1">Latitude</label>
+                  <input
+                    type="number"
+                    step="0.0001"
+                    value={latitude}
+                    onChange={(e) => setLatitude(parseFloat(e.target.value) || 0)}
+                    required
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white font-mono focus:outline-none focus:border-teal-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-medium text-slate-400 mb-1">Longitude</label>
+                  <input
+                    type="number"
+                    step="0.0001"
+                    value={longitude}
+                    onChange={(e) => setLongitude(parseFloat(e.target.value) || 0)}
+                    required
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white font-mono focus:outline-none focus:border-teal-500"
+                  />
+                </div>
               </div>
             </div>
           </div>

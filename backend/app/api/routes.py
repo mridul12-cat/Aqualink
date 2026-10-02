@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 
 from ..models.observation import CitizenObservationCreate
 from ..models.onehealth import StreamObservationRecord, OneHealthAssessment, AIValidationResult
-from ..services.seed_data import generate_seed_stream_records, create_processed_record
+from ..services.seed_data import generate_seed_stream_records, create_processed_record, resolve_pilot_id
 from ..services.water_quality import compute_ecological_health, compute_biological_indices
 from ..services.onehealth_risk import evaluate_public_health_hazards, synthesize_one_health_assessment
 from ..services.ai_validator import validate_stream_observation
@@ -37,13 +37,37 @@ def health_check():
         "timestamp": datetime.now(timezone.utc).isoformat()
     }
 
+def filter_by_city_or_watershed(record: StreamObservationRecord, query_str: str) -> bool:
+    if not query_str:
+        return True
+    resolved = resolve_pilot_id(query_str)
+    if resolved == "all":
+        return True
+    if resolved and record.pilot_city == resolved:
+        return True
+    q = query_str.lower().strip()
+    first_part = q.split(",")[0].strip()
+    return bool(
+        (record.pilot_city and (q in record.pilot_city.lower() or first_part in record.pilot_city.lower())) or
+        (q in record.catchment_basin.lower() or first_part in record.catchment_basin.lower()) or
+        (q in record.stream_name.lower() or first_part in record.stream_name.lower())
+    )
+
+filter_by_city = filter_by_city_or_watershed
+
 @router.get("/streams", response_model=List[StreamObservationRecord])
 def get_streams(
+    pilot_city: Optional[str] = Query(None, description="Filter by pilot city/watershed (e.g., coimbra, benevento, oslo, portland, all)"),
+    city: Optional[str] = Query(None, description="Alias for pilot_city"),
+    watershed: Optional[str] = Query(None, description="Alias for pilot_city or catchment"),
     catchment: Optional[str] = Query(None, description="Filter by catchment basin"),
     advisory: Optional[str] = Query(None, description="Filter by recreational advisory (SAFE, CAUTION, UNSAFE)"),
     min_score: Optional[float] = Query(None, description="Minimum One Health score")
 ):
     results = list(RECORDS_DB.values())
+    target = pilot_city or city or watershed
+    if target:
+        results = [r for r in results if filter_by_city_or_watershed(r, target)]
     if catchment:
         results = [r for r in results if catchment.lower() in r.catchment_basin.lower()]
     if advisory:
@@ -76,10 +100,22 @@ def submit_citizen_observation(obs: CitizenObservationCreate):
     return record
 
 @router.get("/alerts")
-def get_early_warning_alerts():
+def get_early_warning_alerts(
+    pilot_city: Optional[str] = Query(None, description="Filter alerts by pilot city/watershed"),
+    city: Optional[str] = Query(None, description="Alias for pilot_city"),
+    watershed: Optional[str] = Query(None, description="Alias for pilot_city or catchment"),
+    catchment: Optional[str] = Query(None, description="Filter by catchment basin")
+):
     """Aggregate early warning triggers and public health alerts across the watershed."""
+    target = pilot_city or city or watershed
+    records = list(RECORDS_DB.values())
+    if target:
+        records = [r for r in records if filter_by_city_or_watershed(r, target)]
+    if catchment:
+        records = [r for r in records if catchment.lower() in r.catchment_basin.lower()]
+
     alerts = []
-    for r in RECORDS_DB.values():
+    for r in records:
         hazards = r.assessment.public_health_hazards
         if r.assessment.early_warning_alerts:
             for alert_text in r.assessment.early_warning_alerts:
@@ -88,6 +124,7 @@ def get_early_warning_alerts():
                     "stream_name": r.stream_name,
                     "station_id": r.station_id,
                     "catchment_basin": r.catchment_basin,
+                    "pilot_city": r.pilot_city,
                     "timestamp": r.timestamp,
                     "alert": alert_text,
                     "advisory": hazards.recreational_advisory.value,
@@ -102,11 +139,38 @@ def get_early_warning_alerts():
     }
 
 @router.get("/stats")
-def get_watershed_statistics():
+def get_watershed_statistics(
+    pilot_city: Optional[str] = Query(None, description="Filter stats by pilot city/watershed"),
+    city: Optional[str] = Query(None, description="Alias for pilot_city"),
+    watershed: Optional[str] = Query(None, description="Alias for pilot_city or catchment"),
+    catchment: Optional[str] = Query(None, description="Filter by catchment basin")
+):
     """Summary metrics of ecological and public health status across the monitored region."""
     records = list(RECORDS_DB.values())
+    target = pilot_city or city or watershed
+    if target:
+        records = [r for r in records if filter_by_city_or_watershed(r, target)]
+    if catchment:
+        records = [r for r in records if catchment.lower() in r.catchment_basin.lower()]
+
     if not records:
-        return {}
+        return {
+            "total_monitoring_stations": 0,
+            "mean_one_health_score": 0.0,
+            "mean_wqi": 0.0,
+            "mean_ehi": 0.0,
+            "total_ept_richness_observed": 0,
+            "advisories": {
+                "safe": 0,
+                "caution": 0,
+                "unsafe": 0
+            },
+            "hazard_alerts": {
+                "high_pathogen_risk_sites": 0,
+                "high_vector_breeding_sites": 0,
+                "high_cyanobacteria_hab_sites": 0
+            }
+        }
         
     scores = [r.assessment.composite_one_health_score for r in records]
     wqi_scores = [r.assessment.ecological_health.wqi_score for r in records]
@@ -146,10 +210,21 @@ def export_single_fhir_bundle(record_id: str):
     return convert_observation_to_fhir_bundle(record)
 
 @router.get("/fhir/bundle")
-def export_all_fhir_bundle():
-    """Export all watershed observations as combined HL7 FHIR R4 Collection Bundle."""
+def export_all_fhir_bundle(
+    pilot_city: Optional[str] = Query(None, description="Filter by pilot city/watershed"),
+    city: Optional[str] = Query(None, description="Alias for pilot_city"),
+    watershed: Optional[str] = Query(None, description="Alias for pilot_city or catchment"),
+    catchment: Optional[str] = Query(None, description="Filter by catchment basin")
+):
+    """Export watershed observations as combined HL7 FHIR R4 Collection Bundle."""
+    target = pilot_city or city or watershed
+    records = list(RECORDS_DB.values())
+    if target:
+        records = [r for r in records if filter_by_city_or_watershed(r, target)]
+    if catchment:
+        records = [r for r in records if catchment.lower() in r.catchment_basin.lower()]
     all_entries = []
-    for r in RECORDS_DB.values():
+    for r in records:
         b = convert_observation_to_fhir_bundle(r)
         all_entries.extend(b.get("entry", []))
         
@@ -163,6 +238,18 @@ def export_all_fhir_bundle():
     }
 
 @router.get("/ogc/geojson")
-def export_ogc_geojson():
-    """Export all stream monitoring stations as OGC-compliant GeoJSON FeatureCollection."""
-    return convert_to_ogc_geojson_features(list(RECORDS_DB.values()))
+def export_ogc_geojson(
+    pilot_city: Optional[str] = Query(None, description="Filter by pilot city/watershed"),
+    city: Optional[str] = Query(None, description="Alias for pilot_city"),
+    watershed: Optional[str] = Query(None, description="Alias for pilot_city or catchment"),
+    catchment: Optional[str] = Query(None, description="Filter by catchment basin")
+):
+    """Export stream monitoring stations as OGC-compliant GeoJSON FeatureCollection."""
+    target = pilot_city or city or watershed
+    records = list(RECORDS_DB.values())
+    if target:
+        records = [r for r in records if filter_by_city_or_watershed(r, target)]
+    if catchment:
+        records = [r for r in records if catchment.lower() in r.catchment_basin.lower()]
+    return convert_to_ogc_geojson_features(records)
+

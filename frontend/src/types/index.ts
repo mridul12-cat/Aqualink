@@ -48,6 +48,7 @@ export interface CitizenObservationCreate {
   latitude: number;
   longitude: number;
   catchment_basin: string;
+  pilot_city?: string;
   observer_name: string;
   observer_tier: string;
   notes?: string;
@@ -126,6 +127,7 @@ export interface StreamObservationRecord {
   latitude: number;
   longitude: number;
   catchment_basin: string;
+  pilot_city?: string;
   timestamp: string;
   observer_name: string;
   observer_tier: string;
@@ -142,6 +144,7 @@ export interface EarlyWarningAlert {
   stream_name: string;
   station_id: string;
   catchment_basin: string;
+  pilot_city?: string;
   timestamp: string;
   alert: string;
   advisory: 'SAFE' | 'CAUTION' | 'UNSAFE';
@@ -168,3 +171,82 @@ export interface WatershedStats {
     high_cyanobacteria_hab_sites: number;
   };
 }
+
+export type PilotCityId = 'all' | 'coimbra' | 'benevento' | 'oslo' | 'portland';
+
+export interface PilotBasinInfo {
+  id: PilotCityId;
+  name: string;
+  city: string;
+  country: string;
+  basinName: string;
+  flag: string;
+  badge: string;
+  center: [number, number]; // [lat, lng]
+  zoom: number;
+  description: string;
+}
+
+export const PILOT_BASINS: Record<PilotCityId, PilotBasinInfo> = {
+  coimbra: {
+    id: 'coimbra',
+    name: 'Coimbra, Portugal (Mondego River Basin / Ribeira de Coselhas) [Primary EU Pilot]',
+    city: 'Coimbra',
+    country: 'Portugal',
+    basinName: 'Mondego River Basin / Ribeira de Coselhas',
+    flag: '🇵🇹',
+    badge: 'Primary EU Pilot',
+    center: [40.211, -8.429],
+    zoom: 13,
+    description: 'Coimbra, Portugal (Mondego River Basin / Ribeira de Coselhas) [Primary EU Pilot]'
+  },
+  benevento: {
+    id: 'benevento',
+    name: 'Benevento, Italy (Calore River / Sabato River Basin) [EU Pilot]',
+    city: 'Benevento',
+    country: 'Italy',
+    basinName: 'Calore River / Sabato River Basin',
+    flag: '🇮🇹',
+    badge: 'EU Pilot',
+    center: [41.132, 14.778],
+    zoom: 13,
+    description: 'Benevento, Italy (Calore River / Sabato River Basin) [EU Pilot]'
+  },
+  oslo: {
+    id: 'oslo',
+    name: 'Oslo, Norway (Akerselva / Alna River Basin) [EU Pilot]',
+    city: 'Oslo',
+    country: 'Norway',
+    basinName: 'Akerselva / Alna River Basin',
+    flag: '🇳🇴',
+    badge: 'EU Pilot',
+    center: [59.932, 10.772],
+    zoom: 12,
+    description: 'Oslo, Norway (Akerselva / Alna River Basin) [EU Pilot]'
+  },
+  portland: {
+    id: 'portland',
+    name: 'Portland, USA (Columbia Slough / Lower Willamette Basin) [US Case Study]',
+    city: 'Portland',
+    country: 'USA',
+    basinName: 'Columbia Slough / Lower Willamette Basin',
+    flag: '🇺🇸',
+    badge: 'US Case Study',
+    center: [45.512, -122.668],
+    zoom: 12,
+    description: 'Portland, USA (Columbia Slough / Lower Willamette Basin) [US Case Study]'
+  },
+  all: {
+    id: 'all',
+    name: 'All Basins (Global OneAquaHealth Network)',
+    city: 'Global',
+    country: 'International',
+    basinName: 'OneAquaHealth Pilot Network',
+    flag: '🌍',
+    badge: 'Global Network',
+    center: [48.0, 5.0],
+    zoom: 4,
+    description: 'All International Pilot River Basins & Case Study Locations'
+  }
+};
+
