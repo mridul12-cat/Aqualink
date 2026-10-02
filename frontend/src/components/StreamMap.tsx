@@ -45,11 +45,30 @@ export const StreamMap: React.FC<StreamMapProps> = ({ streams, onSelectStream })
       zoomControl: true,
     });
 
-    // Dark-themed tile layer (CartoDB dark matter or OSM)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    // Public keyless tile layers (USGS / Esri Topographic and OpenStreetMap)
+    const topoLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Source: USGS, GIS User Community',
       maxZoom: 19,
-    }).addTo(map);
+    });
+
+    const osmLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19,
+    });
+
+    const satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Maxar, Earthstar Geographics',
+      maxZoom: 19,
+    });
+
+    // Default to Topographic map (clear river basin & watershed elevation lines)
+    topoLayer.addTo(map);
+
+    L.control.layers({
+      "Topographic Watershed": topoLayer,
+      "OpenStreetMap": osmLayer,
+      "Satellite Imagery": satLayer,
+    }, undefined, { position: 'topright' }).addTo(map);
 
     const markersGroup = L.layerGroup().addTo(map);
     markersRef.current = markersGroup;
