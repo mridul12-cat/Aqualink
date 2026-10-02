@@ -6,7 +6,22 @@ import {
   WatershedStats,
 } from '../types';
 
-const API_BASE = '/api/v1';
+const getApiBase = (): string => {
+  if (typeof window !== 'undefined') {
+    const metaEnv = (typeof import.meta !== 'undefined' && (import.meta as any).env) ? (import.meta as any).env : {};
+    if (metaEnv.VITE_API_URL) {
+      return metaEnv.VITE_API_URL;
+    }
+    // In development mode (e.g. Vite running on port 5173), direct requests to the FastAPI backend on port 8000
+    if (window.location.port === '5173') {
+      const host = window.location.hostname || 'localhost';
+      return `http://${host}:8000/api/v1`;
+    }
+  }
+  return '/api/v1';
+};
+
+const API_BASE = getApiBase();
 
 export async function fetchHealth() {
   const res = await fetch(`${API_BASE}/health`);
