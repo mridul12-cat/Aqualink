@@ -16,8 +16,8 @@ Actionable insight
 FHIR / GeoJSON interoperability
 ```
 
-[![Backend CI / Pytest](https://img.shields.io/badge/pytest-32%20passed-emerald.svg)](./backend/tests)
-[![Frontend Tests](https://img.shields.io/badge/frontend%20tests-9%20passed-teal.svg)](./frontend/src/tests)
+[![Backend CI / Pytest](https://img.shields.io/badge/pytest-40%20passed-emerald.svg)](./backend/tests)
+[![Frontend Tests](https://img.shields.io/badge/frontend%20tests-10%20passed-teal.svg)](./frontend/src/tests)
 [![Frontend Build](https://img.shields.io/badge/vite-compiled%200%20errors-teal.svg)](./frontend)
 [![HL7 FHIR R4](https://img.shields.io/badge/HL7%20FHIR-R4%20Compliant-blue.svg)](./docs/fhir_implementation_guide.md)
 [![OGC GeoJSON](https://img.shields.io/badge/OGC-GeoJSON%20CRS84-orange.svg)](./backend/app/services/ogc_converter.py)
@@ -192,8 +192,8 @@ FHIR R4 / GeoJSON (Digital Health Interoperability)
 
 ## Technology
 
-- **Backend**: Python 3.9+, FastAPI, Pydantic v2, Pytest (32 automated tests).
-- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS, Lucide React, Leaflet (9 automated tests).
+- **Backend**: Python 3.9+, FastAPI, Pydantic v2, Pytest (40 automated tests).
+- **Frontend**: React 19, TypeScript, Vite, Tailwind CSS, Lucide React, Leaflet (10 automated tests).
 - **Standards & Vocabularies**: HL7 FHIR R4, Regenstrief LOINC, UCUM units of measure, OGC GeoJSON.
 - **Scientific Formulations**: USGS Benson & Krause (1984) DO saturation kinetics, NSF-WQI curves, BMWP (Biological Monitoring Working Party), Hilsenhoff Family Biotic Index (FBI).
 - **Containerization**: Multi-stage Dockerfiles and root `docker-compose.yml`.
@@ -279,7 +279,7 @@ uvicorn app.main:app --reload --port 8000
 ```bash
 pytest -v
 ```
-*(32 automated test cases verifying validation rules, risk engines, FHIR conversions, and endpoints)*
+*(40 automated test cases verifying validation rules, risk engines, FHIR conversions, boundary coordinates, missing optional fields, and endpoints)*
 
 #### 2. Frontend Application (React + Vite + TypeScript)
 ```bash
@@ -292,7 +292,7 @@ npm run dev
 npm test
 npm run build
 ```
-*(9 automated unit tests verifying schema conformance, scenario resets, basin coordinates, and filtering)*
+*(10 automated unit tests verifying schema conformance, scenario resets, decision hierarchy status logic, basin coordinates, and filtering)*
 
 Open `http://localhost:5173` in your browser.
 

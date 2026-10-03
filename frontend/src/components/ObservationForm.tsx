@@ -1090,6 +1090,27 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
                   )}
                 </div>
 
+                {/* Live "Why?" parameter check summary */}
+                <div className="pt-2 space-y-1">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                    Parameter Consistency Checks:
+                  </span>
+                  <div className="grid grid-cols-2 gap-1.5 text-[11px]">
+                    <div className={`p-1.5 rounded border ${Number(doMgL) < 4.0 ? 'bg-rose-950/40 border-rose-500/30 text-rose-300' : Number(doMgL) < 6.0 ? 'bg-amber-950/40 border-amber-500/30 text-amber-300' : 'bg-slate-950 border-slate-800 text-slate-300'}`}>
+                      {Number(doMgL) < 6.0 ? '⚠' : '✓'} DO: {doMgL} mg/L
+                    </div>
+                    <div className={`p-1.5 rounded border ${Number(turbidityNtu) > 20.0 ? 'bg-amber-950/40 border-amber-500/30 text-amber-300' : 'bg-slate-950 border-slate-800 text-slate-300'}`}>
+                      {Number(turbidityNtu) > 20.0 ? '⚠' : '✓'} Turb: {turbidityNtu} NTU
+                    </div>
+                    <div className={`p-1.5 rounded border ${odor !== 'none' ? 'bg-amber-950/40 border-amber-500/30 text-amber-300' : 'bg-slate-950 border-slate-800 text-slate-300'}`}>
+                      {odor !== 'none' ? '⚠' : '✓'} Odor: {odor === 'none' ? 'none' : odor.replace('_', ' ')}
+                    </div>
+                    <div className={`p-1.5 rounded border ${(Number(stoneflies) + Number(mayflies) + Number(caddisflies)) === 0 ? 'bg-amber-950/40 border-amber-500/30 text-amber-300' : 'bg-slate-950 border-slate-800 text-slate-300'}`}>
+                      {(Number(stoneflies) + Number(mayflies) + Number(caddisflies)) > 0 ? '✓' : '⚠'} EPT: {Number(stoneflies) + Number(mayflies) + Number(caddisflies)} taxa
+                    </div>
+                  </div>
+                </div>
+
                 {/* Contradictions List */}
                 {validationResult.contradictions_detected.length > 0 && (
                   <div className="mt-4 space-y-2">
@@ -1148,6 +1169,18 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
                   </span>
                   <p className="text-slate-300 text-[11px] leading-relaxed">
                     {validationResult.scientific_rationale}
+                  </p>
+                </div>
+
+                {/* Recommended next step */}
+                <div className="mt-3 bg-teal-950/40 border border-teal-500/30 p-2.5 rounded-lg text-xs space-y-1">
+                  <span className="text-[10px] font-extrabold uppercase text-teal-300 block">
+                    Recommended Next Step:
+                  </span>
+                  <p className="text-slate-200 text-[11px] leading-relaxed">
+                    {validationResult.human_in_the_loop_flag
+                      ? 'Review probe calibration and macroinvertebrate identification before submitting. The record will be ingested with a Human Review flag.'
+                      : 'Observation satisfies all automated consistency checks. Ready to verify & submit to One Health surveillance network.'}
                   </p>
                 </div>
 

@@ -14,7 +14,7 @@
 | **Scene 3** | 1:00 – 2:00 | Field Submit Tab (`ObservationForm`) & Validation Explainer Modal | **AI-Assisted Validation in Action** | Input realistic contradiction → "Contradiction Detected" → Click "Why? / How Validation Works" modal → Human review required → Load consistent observation. |
 | **Scene 4** | 2:00 – 2:40 | Resilience Tab (`EarlyWarningPanel`) | **Actionable Intelligence & Triage** | Translating validated signals into early warnings, triage directives, and municipal field dispatches. |
 | **Scene 5** | 2:40 – 3:15 | Standards Interop Modal (`InteropModal`) | **Digital Health & Geospatial Standards** | Native HL7 FHIR R4 Bundle with LOINC codes & OGC GeoJSON export for public health and environmental registries. |
-| **Scene 6** | 3:15 – 3:45 | Terminal & Architecture Overview | **Technical Rigor & Verification** | 41 automated tests (32 pytest + 9 npm), FastAPI + React 19 stack, Docker Compose reproducibility. |
+| **Scene 6** | 3:15 – 3:45 | Terminal & Architecture Overview | **Technical Rigor & Verification** | 50 automated tests (40 pytest + 10 npm), FastAPI + React 19 stack, Docker Compose reproducibility. |
 | **Scene 7** | 3:45 – 4:05 | Full Dashboard view | **Closing & One Health Vision** | "From seeing a problem in the water to understanding what it means and what should happen next." |
 
 ---
@@ -142,8 +142,8 @@
 ### [3:15 – 3:45] Scene 6: Technical Rigor, Verification & Reproducibility
 **Screen Visual:**
 - Cut briefly to split-screen: VS Code / Terminal running automated test suites.
-- Show `pytest backend/tests` passing 32 tests.
-- Show `npm test` passing 9 frontend tests.
+- Show `pytest backend/tests` passing 40 tests.
+- Show `npm test` passing 10 frontend tests.
 - Show `docker-compose.yml` and clean multi-stage architecture.
 
 **Speaker Narration:**
@@ -151,11 +151,11 @@
 > - *FastAPI backend with Pydantic v2 data models.*
 > - *React 19, TypeScript, and Tailwind CSS frontend.*
 > - *Strict physical-chemical formulations including USGS Benson & Krause dissolved oxygen kinetics, BMWP macroinvertebrate weighting, and Hilsenhoff biotic indexing.*
-> - *41 automated tests—32 backend pytest unit tests and 9 frontend unit tests—verifying validation rules, hazard formulas, and FHIR serialization.*
+> - *50 automated tests—40 backend pytest unit tests and 10 frontend unit tests—verifying validation rules, boundary coordinates, missing field handling, hazard formulas, and FHIR serialization.*
 > - *And full reproducibility via single-command Docker Compose."*
 
 **Visual Cue for Recorder:**
-- Show terminal with green test execution output (`32 passed in 0.53s`, `9 passed in 0.22s`).
+- Show terminal with green test execution output (`40 passed in 0.50s`, `10 passed in 0.22s`).
 - Show clean architecture diagram or terminal showing both backend and frontend running.
 
 ---

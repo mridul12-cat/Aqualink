@@ -286,4 +286,67 @@ def test_standards_export_pilot_filtering():
     assert bundle["resourceType"] == "Bundle"
     assert bundle["total"] > 0
 
+def test_observation_with_missing_optional_fields():
+    # Only supply mandatory sensor fields; omit conductivity, nitrate, phosphate
+    obs = {
+        "stream_name": "Minimal Reading Reach",
+        "latitude": 40.2110,
+        "longitude": -8.4290,
+        "catchment_basin": "Mondego Basin",
+        "observer_name": "Volunteer Min",
+        "readings": {
+            "temperature_c": 16.0,
+            "ph": 7.3,
+            "dissolved_oxygen_mg_l": 8.9,
+            "turbidity_ntu": 3.1
+            # conductivity_us_cm, nitrate_mg_l, phosphate_mg_l omitted
+        }
+    }
+    res = client.post("/api/v1/observations", json=obs)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["readings"]["conductivity_us_cm"] is None
+    assert data["assessment"]["composite_one_health_score"] > 60.0
+    # Core 5 FHIR resources (temp, ph, do, turb + RiskAssessment)
+    assert data["fhir_observation_count"] == 5
+
+def test_observation_with_boundary_coordinates():
+    # Extreme valid coordinates: near South Pole and International Date Line
+    obs = {
+        "stream_name": "Antarctic Sub-glacial Runoff",
+        "latitude": -78.5,
+        "longitude": 165.2,
+        "catchment_basin": "Polar Catchment",
+        "readings": {
+            "temperature_c": 1.5,
+            "ph": 6.9,
+            "dissolved_oxygen_mg_l": 13.5,
+            "turbidity_ntu": 1.2
+        }
+    }
+    res = client.post("/api/v1/observations", json=obs)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["latitude"] == -78.5
+    assert data["longitude"] == 165.2
+    assert data["pilot_city"] == "portland"  # Graceful fallback pilot
+
+def test_observation_invalid_coordinates_rejected():
+    # Coordinates exceeding -90/90 or -180/180 must return HTTP 422
+    obs = {
+        "stream_name": "Impossible Coordinates Stream",
+        "latitude": 95.0,  # Invalid: > 90
+        "longitude": -200.0,  # Invalid: < -180
+        "catchment_basin": "Error Basin",
+        "readings": {
+            "temperature_c": 15.0,
+            "ph": 7.0,
+            "dissolved_oxygen_mg_l": 8.0,
+            "turbidity_ntu": 5.0
+        }
+    }
+    res = client.post("/api/v1/observations", json=obs)
+    assert res.status_code == 422
+
+
 

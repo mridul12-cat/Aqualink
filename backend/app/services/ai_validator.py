@@ -9,7 +9,8 @@ from ..models.observation import (
     WaterClarity,
     WaterOdor,
     SurfaceSheen,
-    FlowRate
+    FlowRate,
+    TrashDensity
 )
 from ..models.onehealth import (
     AIValidationResult,

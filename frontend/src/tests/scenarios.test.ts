@@ -217,3 +217,24 @@ test('Observation payload contains valid pilot_city assignment', () => {
   assert.ok(observationPayload.longitude >= -8.6 && observationPayload.longitude <= -8.2);
 });
 
+test('Decision hierarchy status and why check evaluation logic', () => {
+  const evaluateRiskTitle = (advisory: string, score: number, pathogenRisk: string) => {
+    const isHighRisk = advisory === 'UNSAFE' || score < 45 || pathogenRisk === 'CRITICAL';
+    const isModerateRisk = !isHighRisk && (advisory === 'CAUTION' || score < 70);
+    return isHighRisk
+      ? 'HIGH ECOLOGICAL & PUBLIC HEALTH RISK'
+      : isModerateRisk
+      ? 'MODERATE ECOLOGICAL STRESS'
+      : score >= 85
+      ? 'PRISTINE STREAM ECOSYSTEM'
+      : 'HEALTHY & BALANCED STREAM REACH';
+  };
+
+  assert.strictEqual(evaluateRiskTitle('UNSAFE', 42, 'HIGH'), 'HIGH ECOLOGICAL & PUBLIC HEALTH RISK');
+  assert.strictEqual(evaluateRiskTitle('SAFE', 38, 'LOW'), 'HIGH ECOLOGICAL & PUBLIC HEALTH RISK');
+  assert.strictEqual(evaluateRiskTitle('CAUTION', 62, 'MODERATE'), 'MODERATE ECOLOGICAL STRESS');
+  assert.strictEqual(evaluateRiskTitle('SAFE', 88, 'LOW'), 'PRISTINE STREAM ECOSYSTEM');
+  assert.strictEqual(evaluateRiskTitle('SAFE', 76, 'LOW'), 'HEALTHY & BALANCED STREAM REACH');
+});
+
+
