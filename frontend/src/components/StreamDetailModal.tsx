@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StreamObservationRecord, PILOT_BASINS, PilotCityId } from '../types';
-import { fetchSingleFhir } from '../services/api';
+import { fetchSingleFhir, generateClientFhirBundle } from '../services/api';
 import {
   X,
   Droplets,
@@ -19,7 +19,8 @@ import {
   HelpCircle,
   AlertOctagon,
   Eye,
-  Shield
+  Shield,
+  Loader2
 } from 'lucide-react';
 import { ValidationExplainerModal } from './ValidationExplainerModal';
 
@@ -48,13 +49,21 @@ export const StreamDetailModal: React.FC<StreamDetailModalProps> = ({ stream, on
   const riskTitle = isHighRisk ? 'HIGH ECOLOGICAL & PUBLIC HEALTH RISK' : isModerateRisk ? 'MODERATE ECOLOGICAL STRESS' : assessment.composite_one_health_score >= 85 ? 'PRISTINE STREAM ECOSYSTEM' : 'HEALTHY & BALANCED STREAM REACH';
 
   const handleLoadFhir = async () => {
+    if (!stream) return;
     setIsLoadingFhir(true);
     try {
-      const data = await fetchSingleFhir(stream.id);
+      const data = await fetchSingleFhir(stream.id || stream.station_id, stream);
       setFhirData(data);
       setShowFhir(true);
     } catch (err) {
-      console.error('Failed to load FHIR bundle:', err);
+      console.warn('Backend FHIR fetch failed, generating client-side bundle:', err);
+      try {
+        const localData = generateClientFhirBundle(stream);
+        setFhirData(localData);
+        setShowFhir(true);
+      } catch (localErr) {
+        console.error('Failed to generate local FHIR bundle:', localErr);
+      }
     } finally {
       setIsLoadingFhir(false);
     }
@@ -555,10 +564,19 @@ export const StreamDetailModal: React.FC<StreamDetailModalProps> = ({ stream, on
                 <button
                   onClick={handleLoadFhir}
                   disabled={isLoadingFhir}
-                  className="px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-500 text-slate-950 font-bold text-xs transition-all flex items-center space-x-1"
+                  className="px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-500 disabled:opacity-60 text-slate-950 font-bold text-xs transition-all flex items-center space-x-1.5"
                 >
-                  <span>Generate FHIR Bundle</span>
-                  <ExternalLink className="w-3 h-3" />
+                  {isLoadingFhir ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Generating FHIR...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Generate FHIR Bundle</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </>
+                  )}
                 </button>
               ) : (
                 <div className="flex items-center space-x-2">

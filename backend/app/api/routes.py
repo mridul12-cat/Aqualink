@@ -209,6 +209,11 @@ def export_single_fhir_bundle(record_id: str):
     record = get_stream_by_id(record_id)
     return convert_observation_to_fhir_bundle(record)
 
+@router.post("/fhir/generate")
+def generate_single_fhir_bundle(record: StreamObservationRecord):
+    """Convert any stream observation record directly into an HL7 FHIR R4 Bundle (stateless for serverless resilience)."""
+    return convert_observation_to_fhir_bundle(record)
+
 @router.get("/fhir/bundle")
 def export_all_fhir_bundle(
     pilot_city: Optional[str] = Query(None, description="Filter by pilot city/watershed"),

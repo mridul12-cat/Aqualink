@@ -124,9 +124,9 @@ To realize the vision of hackathon sponsors **HL7 Europe** and **EFMI**, AquaLin
   - **Leaflet & React-Leaflet** for interactive geospatial mapping with custom SVG markers.
   - **Lucide React** for standardized iconography.
 - **Verification & Testing**:
-  - **40 backend pytest tests** covering Benson & Krause saturation, BMWP calculations, Hilsenhoff indices, contradiction detection, boundary coordinate handling, missing optional sensor fields, FHIR bundle serialization, and API endpoints.
-  - **10 frontend unit tests** verifying rendering, user interactions, decision hierarchy status logic, and state handling.
-  - Total: **50 automated tests**, runnable with a single command.
+  - **41 backend pytest tests** covering Benson & Krause saturation, BMWP calculations, Hilsenhoff indices, contradiction detection, boundary coordinate handling, missing optional sensor fields, FHIR bundle serialization, and API endpoints.
+  - **11 frontend unit tests** verifying rendering, user interactions, decision hierarchy status logic, client-side FHIR bundle generation, and state handling.
+  - Total: **52 automated tests**, runnable with a single command.
 - **Reproducibility**:
   - Multi-stage `Dockerfile`s for both backend and frontend.
   - Single-command orchestration via `docker compose up --build`.
@@ -139,7 +139,7 @@ To provide full transparency to judges and reviewers, our prototype scope is div
 
 | Capability Tier | Scope Description | Implemented Features |
 | :--- | :--- | :--- |
-| **Fully Implemented** | Operational code executing in the repository today | • 4-rule AI-assisted validation & contradiction detection<br>• Benson & Krause DO saturation & non-linear WQI<br>• BMWP & Hilsenhoff FBI ecological calculations<br>• Model-derived pathogen risk & vector hazard formulations<br>• Dynamic HL7 FHIR R4 bundle & LOINC mapping<br>• OGC GeoJSON CRS84 spatial serialization<br>• 50 automated tests (40 pytest + 10 npm)<br>• Interactive validation explainer & provenance UI |
+| **Fully Implemented** | Operational code executing in the repository today | • 4-rule AI-assisted validation & contradiction detection<br>• Benson & Krause DO saturation & non-linear WQI<br>• BMWP & Hilsenhoff FBI ecological calculations<br>• Model-derived pathogen risk & vector hazard formulations<br>• Dynamic HL7 FHIR R4 bundle & LOINC mapping<br>• OGC GeoJSON CRS84 spatial serialization<br>• 52 automated tests (41 pytest + 11 npm)<br>• Interactive validation explainer & provenance UI |
 | **Simulated / Demonstration** | Prototype UI features demonstrating downstream workflows | • Municipal field team dispatch logging (in-memory state simulation)<br>• Seeded network of 30 monitoring stations across 4 pilot basins (Coimbra, Benevento, Oslo, Portland)<br>• Incident briefing document generation |
 | **Future Integration** | Requires additional hardware, field trials, or external infrastructure | • Edge-deployed camera vision models for automated macroinvertebrate identification<br>• Continuous IoT water quality buoy streaming via LoRaWAN/MQTT<br>• FHIR-based interoperability with compatible systems (e.g. regional public health and clinical EHR endpoints)<br>• Laboratory wastewater metagenomics sequencing integration |
 
@@ -157,7 +157,7 @@ To provide full transparency to judges and reviewers, our prototype scope is div
 
 ### 3. Technical Quality & Robustness (20%)
 - Reproducible working prototype with modular separation of concerns.
-- 50 automated tests (40 backend pytest + 10 frontend unit tests) guaranteeing formula accuracy, edge cases, and schema conformance.
+- 52 automated tests (41 backend pytest + 11 frontend unit tests) guaranteeing formula accuracy, edge cases, and schema conformance.
 - Docker Compose reproducibility allowing judges to run the entire stack with zero manual configuration.
 
 ### 4. Usability & User Experience (15%)

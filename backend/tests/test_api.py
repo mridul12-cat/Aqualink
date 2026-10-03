@@ -115,6 +115,20 @@ def test_fhir_bundle_endpoint():
     assert bundle["resourceType"] == "Bundle"
     assert bundle["total"] > 20
 
+def test_fhir_generate_stateless_endpoint():
+    # Fetch an existing stream record
+    res_streams = client.get("/api/v1/streams")
+    assert res_streams.status_code == 200
+    record = res_streams.json()[0]
+    
+    # POST to stateless generate endpoint
+    post_res = client.post("/api/v1/fhir/generate", json=record)
+    assert post_res.status_code == 200
+    bundle = post_res.json()
+    assert bundle["resourceType"] == "Bundle"
+    assert bundle["type"] == "collection"
+    assert bundle["total"] >= 5
+
 def test_ogc_geojson_endpoint():
     response = client.get("/api/v1/ogc/geojson")
     assert response.status_code == 200

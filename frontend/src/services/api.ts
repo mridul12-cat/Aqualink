@@ -1,10 +1,13 @@
-import {
+import type {
   StreamObservationRecord,
   CitizenObservationCreate,
   AIValidationResult,
   EarlyWarningAlert,
   WatershedStats,
 } from '../types';
+import { generateClientFhirBundle } from './fhir';
+
+export { generateClientFhirBundle };
 
 const getApiBase = (): string => {
   if (typeof window !== 'undefined') {
@@ -103,10 +106,34 @@ export async function fetchFhirBundle(pilotCity?: string): Promise<any> {
   return res.json();
 }
 
-export async function fetchSingleFhir(recordId: string): Promise<any> {
-  const res = await fetch(`${API_BASE}/fhir/observations/${recordId}`);
-  if (!res.ok) throw new Error(`Failed to fetch FHIR record`);
-  return res.json();
+export async function fetchSingleFhir(recordId: string, fallbackRecord?: StreamObservationRecord): Promise<any> {
+  try {
+    const res = await fetch(`${API_BASE}/fhir/observations/${recordId}`);
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn(`GET ${API_BASE}/fhir/observations/${recordId} network call failed:`, err);
+  }
+
+  // If backend GET returned non-200 (e.g. 404 in serverless environments) or failed, attempt stateless POST or client-side generation
+  if (fallbackRecord) {
+    try {
+      const postRes = await fetch(`${API_BASE}/fhir/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fallbackRecord),
+      });
+      if (postRes.ok) {
+        return await postRes.json();
+      }
+    } catch (err) {
+      console.warn(`POST ${API_BASE}/fhir/generate failed, falling back to local FHIR generator:`, err);
+    }
+    return generateClientFhirBundle(fallbackRecord);
+  }
+
+  throw new Error(`Failed to fetch FHIR record`);
 }
 
 export async function fetchOgcGeoJson(pilotCity?: string): Promise<any> {
