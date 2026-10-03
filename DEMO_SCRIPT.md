@@ -76,7 +76,7 @@
 > 
 > *(Click 'Why? How Validation Works' button to open the Validation Explainer Modal).*
 > 
-> *AquaLink’s validator isn’t an opaque black box. It's an explainable, rule-based consistency engine built on freshwater science:*
+> *AquaLink’s validator isn’t an opaque black box. It provides explainable AI-assisted validation using scientific rules, anomaly detection, and human-in-the-loop review:*
 > 1. *It detected that reporting 'Crystal Clear' water contradicts an instrument turbidity of 68 NTU.*
 > 2. *More critically, the observer reported 6 Plecoptera stonefly nymphs in water with only 3.2 mg/L dissolved oxygen. Stoneflies possess delicate tracheal gills that suffocate below 5.0 mg/L.*
 > 
@@ -89,7 +89,7 @@
 **Visual Cue for Recorder:**
 - Click "Contradiction Paradox". The amber/red warning appears with specific bullet points.
 - Click "Why? How Validation Works" to open the interactive `ValidationExplainerModal`. Show the 4 scientific rule cards.
-- Close modal. Click "Pristine Headwater". Show the green status: *"Validated — No Automated Contradictions Detected"*. Click *"Verify & Submit"*.
+- Close modal. Click "Pristine Headwater". Show the green status: *"Validated — no automated contradictions detected"*. Click *"Verify & Submit"*.
 
 ---
 
@@ -128,7 +128,7 @@
 > - *Dissolved oxygen maps to LOINC `2710-2`.*
 > - *Pathogen and vector risks are packaged as standardized FHIR `RiskAssessment` resources.*
 > 
-> *This allows public health epidemiologists and environmental health surveillance systems to consume validated stream observations using the same open data standards as modern healthcare registries.*
+> *This enables FHIR-based interoperability with compatible systems, allowing public health epidemiologists and environmental health surveillance networks to consume validated stream observations using standard digital health models.*
 > 
 > *Simultaneously, our **OGC GeoJSON** endpoint provides geospatial interoperability for municipal GIS and urban planning platforms."*
 
@@ -147,7 +147,7 @@
 - Show `docker-compose.yml` and clean multi-stage architecture.
 
 **Speaker Narration:**
-> *"Behind the interface is a robust, production-tested architecture:*
+> *"Behind the interface is a reproducible working prototype with a robust, tested architecture:*
 > - *FastAPI backend with Pydantic v2 data models.*
 > - *React 19, TypeScript, and Tailwind CSS frontend.*
 > - *Strict physical-chemical formulations including USGS Benson & Krause dissolved oxygen kinetics, BMWP macroinvertebrate weighting, and Hilsenhoff biotic indexing.*
@@ -168,7 +168,7 @@
 **Speaker Narration:**
 > *"Urban streams are the earliest indicators of environmental degradation and community health risk.*
 > 
-> *AquaLink turns citizen observations into validated One Health intelligence—helping communities move from seeing a problem in the water to understanding what it means and what should happen next.*
+> *AquaLink turns citizen observations into actionable One Health intelligence—helping communities move from seeing a problem in the water to understanding what it means and what should happen next.*
 > 
 > *Thank you."*
 

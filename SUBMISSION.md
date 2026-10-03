@@ -12,7 +12,7 @@
 
 | Track | Role | Relevance & Implementation in AquaLink |
 | :--- | :---: | :--- |
-| **Track 3: AI-Supported Assessment** | **Primary** | Explainable, rule-based anomaly & contradiction detection engine evaluating physical-chemical gas solubility laws, sensor-visual concordance, and benthic ecological guild consistency, with transparent confidence scoring and human-in-the-loop review. |
+| **Track 3: AI-Supported Assessment** | **Primary** | Explainable AI-assisted validation using scientific rules, anomaly detection, and human-in-the-loop review. Evaluates physical-chemical gas solubility laws, sensor-visual concordance, and benthic ecological guild consistency with transparent confidence scoring. |
 | **Track 7: Digital Health Standards & Interoperability** | **Secondary** | Native serialization of environmental observations into **HL7 FHIR R4 Bundles** with standard **LOINC** terminology and **FHIR RiskAssessment** resources, paired with **OGC GeoJSON** for spatial sensor networks. Directly addresses the interoperability mission of **HL7 Europe** and **EFMI**. |
 | **Track 1: Citizen Science UX** | Supporting | Step-by-step field submission wizard with live validation feedback, macroinvertebrate counters, and an interactive "How Validation Works" explainer modal. |
 | **Track 2: Data-to-Insight** | Supporting | Regional stream map synthesizing raw sensor readings into composite Water Quality (WQI), Ecological Health (EHI), and One Health Harmony scores. |
@@ -31,7 +31,7 @@ Urban streams are vital ecological corridors and early sentinels of environmenta
 ## 2. Proposed Solution (~150 words)
 **AquaLink** creates an open-source bridge connecting community stream monitoring with One Health surveillance through a 5-stage pipeline:
 1. **Citizen Field Capture**: Volunteers record physical probe readings, benthic macroinvertebrate tallies, and sensory stream conditions through a guided wizard.
-2. **AI-Assisted Validation Engine**: An explainable, rule-based engine evaluates physical solubility laws, sensor-visual concordance, and ecological guild tolerances in real time, assigning transparent confidence scores and flagging anomalies for human review.
+2. **AI-Assisted Validation Engine**: Explainable AI-assisted validation using scientific rules, anomaly detection, and human-in-the-loop review. Evaluates physical solubility laws, sensor-visual concordance, and ecological guild tolerances in real time, assigning transparent confidence scores and flagging anomalies for human review.
 3. **One Health Risk Synthesis**: Validated observations feed algorithmic risk models deriving Water Quality Index (NSF-WQI), Ecological Health (BMWP & Hilsenhoff FBI), model-derived waterborne pathogen risk indicators, and mosquito vector proliferation hazards.
 4. **Resilience & Early Warning Dashboard**: Regional maps and triage panels translate multi-station risks into prioritized municipal directives (e.g., larviciding, sewer outfall tracing, contact advisories).
 5. **Standardized Interoperability**: Every observation is serialized as an HL7 FHIR R4 bundle with LOINC codes and OGC GeoJSON for health surveillance and GIS platforms.
@@ -42,7 +42,7 @@ Urban streams are vital ecological corridors and early sentinels of environmenta
 
 | Feature / Capability | Component / Code Location | Stakeholder & Impact |
 | :--- | :--- | :--- |
-| **AI-Assisted Validation Engine** | [`backend/app/services/ai_validator.py`](file:///Users/mriduldabral/Downloads/Anti%20Gravity/Hackathon/backend/app/services/ai_validator.py) | **Volunteers & Analysts**: Flags sensor errors and ecological paradoxes before ingestion. |
+| **AI-Assisted Validation Engine** | [`backend/app/services/ai_validator.py`](file:///Users/mriduldabral/Downloads/Anti%20Gravity/Hackathon/backend/app/services/ai_validator.py) | **Volunteers & Analysts**: Explainable AI-assisted validation using scientific rules, anomaly detection, and human-in-the-loop review. |
 | **Interactive Validation Explainer Modal** | [`frontend/src/components/ValidationExplainerModal.tsx`](file:///Users/mriduldabral/Downloads/Anti%20Gravity/Hackathon/frontend/src/components/ValidationExplainerModal.tsx) | **Judges & Citizens**: Demystifies validation rules with interactive scientific explanations. |
 | **Citizen Field Submission Wizard** | [`frontend/src/components/ObservationForm.tsx`](file:///Users/mriduldabral/Downloads/Anti%20Gravity/Hackathon/frontend/src/components/ObservationForm.tsx) | **Volunteers**: 4-step guided workflow with one-click bug counters and preset test scenarios. |
 | **One Health Risk & Bio-Index Engine** | [`backend/app/services/water_quality.py`](file:///Users/mriduldabral/Downloads/Anti%20Gravity/Hackathon/backend/app/services/water_quality.py), [`backend/app/services/onehealth_risk.py`](file:///Users/mriduldabral/Downloads/Anti%20Gravity/Hackathon/backend/app/services/onehealth_risk.py) | **Ecologists & Epidemiologists**: Benson & Krause DO saturation, NSF-WQI, BMWP, Hilsenhoff FBI, and vector models. |
@@ -56,14 +56,14 @@ Urban streams are vital ecological corridors and early sentinels of environmenta
 
 ## 4. How the AI-Assisted Validation Works
 
-Rather than employing an unverified or opaque black-box machine learning model, AquaLink’s validation pipeline is an **explainable, rule-based anomaly and contradiction detection engine** grounded in published freshwater limnology and sensor physics.
+Rather than employing an unverified or opaque black-box machine learning model, AquaLink provides **Explainable AI-assisted validation using scientific rules, anomaly detection, and human-in-the-loop review**, grounded in published freshwater limnology and sensor physics.
 
 ### The 4 Core Validation Rules
 1. **Physical-Chemical Solubility Limits**: Calculates theoretical freshwater dissolved oxygen saturation at measured water temperatures using the USGS Benson & Krause (1984) polynomial. Flags uncalibrated sensors reporting $>140\%$ saturation without hyper-eutrophic conditions or $<1.0\text{ mg/L}$ in cold, turbulent headwaters.
 2. **Sensor-Visual Concordance**: Evaluates agreement between optical turbidimeters and citizen visual clarity reports. If a user enters "crystal clear" water alongside a photometer reading of $>50\text{ NTU}$ (or "opaque/turbid" alongside $<5\text{ NTU}$), the system flags an instrument-visual discrepancy.
 3. **Ecological Guild Consistency**: Assesses biological plausibility by cross-referencing benthic macroinvertebrate tallies with physical parameters. For example, sensitive *Plecoptera* (stonefly nymphs) have gill structures that physically cannot survive in dissolved oxygen $<5.0\text{ mg/L}$ or septic conditions. Reporting stoneflies under hypoxia triggers an immediate ecological paradox flag.
 4. **Heuristic Confidence & Anomaly Flagging**:
-   - Observations with zero automated contradictions receive **"Validated — No Automated Contradictions Detected"** (Validation Confidence: 90–98%).
+   - Observations with zero automated contradictions receive **"Validated — no automated contradictions detected"** (Validation Confidence: 90–98%).
    - Observations with physical or ecological paradoxes are assigned **"Contradiction Detected"** (Confidence: 35–45%) and tagged with **"HUMAN REVIEW REQUIRED"**.
 
 ### Transparent Human-in-the-Loop Philosophy
@@ -141,7 +141,7 @@ To provide full transparency to judges and reviewers, our prototype scope is div
 | :--- | :--- | :--- |
 | **Fully Implemented** | Operational code executing in the repository today | • 4-rule AI-assisted validation & contradiction detection<br>• Benson & Krause DO saturation & non-linear WQI<br>• BMWP & Hilsenhoff FBI ecological calculations<br>• Model-derived pathogen risk & vector hazard formulations<br>• Dynamic HL7 FHIR R4 bundle & LOINC mapping<br>• OGC GeoJSON CRS84 spatial serialization<br>• 50 automated tests (40 pytest + 10 npm)<br>• Interactive validation explainer & provenance UI |
 | **Simulated / Demonstration** | Prototype UI features demonstrating downstream workflows | • Municipal field team dispatch logging (in-memory state simulation)<br>• Seeded network of 30 monitoring stations across 4 pilot basins (Coimbra, Benevento, Oslo, Portland)<br>• Incident briefing document generation |
-| **Future Integration** | Requires additional hardware, field trials, or external infrastructure | • Edge-deployed camera vision models for automated macroinvertebrate identification<br>• Continuous IoT water quality buoy streaming via LoRaWAN/MQTT<br>• Direct HL7 FHIR REST API integration with institutional hospital EHR endpoints<br>• Laboratory wastewater metagenomics sequencing integration |
+| **Future Integration** | Requires additional hardware, field trials, or external infrastructure | • Edge-deployed camera vision models for automated macroinvertebrate identification<br>• Continuous IoT water quality buoy streaming via LoRaWAN/MQTT<br>• FHIR-based interoperability with compatible systems (e.g. regional public health and clinical EHR endpoints)<br>• Laboratory wastewater metagenomics sequencing integration |
 
 ---
 
@@ -156,8 +156,8 @@ To provide full transparency to judges and reviewers, our prototype scope is div
 - Replaces black-box opacity with an explainable AI validation system designed for constructive citizen feedback.
 
 ### 3. Technical Quality & Robustness (20%)
-- Production-grade codebase with modular separation of concerns.
-- 41 automated tests guaranteeing formula accuracy, edge cases, and schema conformance.
+- Reproducible working prototype with modular separation of concerns.
+- 50 automated tests (40 backend pytest + 10 frontend unit tests) guaranteeing formula accuracy, edge cases, and schema conformance.
 - Docker Compose reproducibility allowing judges to run the entire stack with zero manual configuration.
 
 ### 4. Usability & User Experience (15%)

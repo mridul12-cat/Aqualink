@@ -52,7 +52,7 @@ Citizen
 | Capability | What it does | Hackathon alignment |
 | :--- | :--- | :--- |
 | **Citizen Observation Wizard** | Guided, jargon-free field entry for in-situ probe readings, macroinvertebrate counts, and sensory conditions with real-time feedback. | Track 1 — Citizen Science UX |
-| **Validation Engine** | Explainable AI-assisted consistency pipeline evaluating gas solubility physics, sensor-visual concordance, and ecological paradoxes. | Track 3 — AI-Supported Assessment |
+| **Validation Engine** | Explainable AI-assisted validation using scientific rules, anomaly detection, and human-in-the-loop review. | Track 3 — AI-Supported Assessment |
 | **One Health Risk Engine** | Algorithmic synthesis linking ecosystem metrics (WQI, EHI, BMWP) to public health hazards (pathogen indicators, vector hazards, HABs). | Track 2 — Data-to-Insight |
 | **Regional Risk Map** | Geospatial map spanning international pilot river basins (Coimbra, Benevento, Oslo, Portland) with color-coded risk pins and alert beacons. | Track 2 / Track 6 |
 | **Resilience Dashboard** | Early warning triage desk translating environmental alerts into concrete municipal interventions (aeration, signage, larvicide). | Track 6 — Resilience Informatics |
@@ -202,7 +202,7 @@ FHIR R4 / GeoJSON (Digital Health Interoperability)
 
 ## Validation approach
 
-AquaLink uses an **explainable AI-assisted validation pipeline combining scientific rules, anomaly detection, and human-in-the-loop review**.
+AquaLink provides **Explainable AI-assisted validation using scientific rules, anomaly detection, and human-in-the-loop review**.
 
 ```
 Citizen input
@@ -318,10 +318,10 @@ Open `http://localhost:5173` in your browser.
 ## Hackathon track alignment
 
 ### Primary Track
-- **Track 3 — AI-Supported Assessment**: Explainable AI-assisted validation pipeline detecting sensor-visual conflicts, DO gas solubility violations, and ecological paradoxes (e.g. stoneflies in hypoxia) with explainable rationales and human-in-the-loop review triggers.
+- **Track 3 — AI-Supported Assessment**: Explainable AI-assisted validation using scientific rules, anomaly detection, and human-in-the-loop review. Detects sensor-visual conflicts, DO gas solubility violations, and ecological paradoxes (e.g. stoneflies in hypoxia) with transparent rationales and verification triggers.
 
 ### Secondary Track
-- **Track 7 — Digital Health Standards**: Direct, dynamic transformation of validated citizen science observations into **HL7 FHIR R4 `Observation` and `RiskAssessment` resources** with official **LOINC** terminology, creating an interoperable bridge for clinical registries (EFMI) and HL7 Europe systems, accompanied by **OGC GeoJSON** for spatial sensor networks.
+- **Track 7 — Digital Health Standards**: Dynamic transformation of validated citizen science observations into **HL7 FHIR R4 `Observation` and `RiskAssessment` resources** with official **LOINC** terminology, enabling **FHIR-based interoperability with compatible systems** (including clinical registries and HL7 Europe systems), accompanied by **OGC GeoJSON** for spatial sensor networks.
 
 ### Supporting Tracks
 - **Track 1 — Citizen Science UX**: Intuitive, guided observation wizard with visual macroinvertebrate counters, sensory dropdowns, and instant debounced validation feedback.
