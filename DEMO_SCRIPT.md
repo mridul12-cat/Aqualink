@@ -106,7 +106,7 @@
 > - *Vector Breeding alerts prioritize stagnant, hypoxic reaches for proactive vector control before mosquito emergence.*
 > - *Cyanobacterial bloom alerts warn of pet toxicity risks.*
 > 
-> *Watershed managers can review real-time incident briefs, dispatch municipal field teams with one click, and coordinate proactive interventions before public health crises escalate."*
+> *Watershed managers can review incident briefs and simulate municipal field dispatches to coordinate proactive interventions before public health crises escalate."*
 
 **Visual Cue for Recorder:**
 - Click on an active alert card.
