@@ -15,6 +15,7 @@ class Settings(BaseModel):
         "http://127.0.0.1:3000",
         "http://localhost:8000",
         "http://127.0.0.1:8000",
+        "https://aqualink-gsoj.vercel.app",
     ]
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
 
