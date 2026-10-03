@@ -95,10 +95,10 @@ export const InteropModal: React.FC<InteropModalProps> = ({ selectedPilot = 'all
           <span>Why Interoperability Matters for One Health (EFMI & HL7 Europe)</span>
         </h2>
         <p className="text-xs text-slate-300 leading-relaxed">
-          Environmental health data is typically locked in isolated municipal spreadsheets, while hospitals and clinical registries operate in isolation.
-          When a citizen scientist logs elevated stream turbidity and organic sewage odor, AquaLink OneHealth instantly converts those observations into standardized
+          Environmental health data is typically locked in isolated municipal spreadsheets, while health registries operate separately.
+          When a citizen scientist logs elevated stream turbidity and organic sewage odor, AquaLink OneHealth converts those observations into standardized
           <strong> HL7 FHIR R4 Observation</strong> and <strong>RiskAssessment</strong> resources coded with official <strong>LOINC</strong> identifiers.
-          Primary care physicians, regional epidemiologists, and veterinary surveillance networks can ingest this feed directly into clinical EHRs, predicting waterborne gastroenteritis or leptospirosis outbreaks before patients reach emergency rooms.
+          This standard digital health payload is structured for interoperable ingestion by clinical health systems, regional epidemiologists, and veterinary surveillance networks to support early environmental health decision support.
         </p>
       </div>
 

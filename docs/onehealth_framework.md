@@ -55,6 +55,8 @@ $$EHI = (WQI \times 0.55) + (BioComposite \times 0.45) - FishKillPenalty$$
 ## 3. Public Health Hazard Vector Formulations
 
 ### 3.1 Waterborne Pathogen Risk Index (0-100)
+*(Model-derived indicator based on environmental conditions; laboratory confirmation is required)*
+
 Turbidity serves as a primary empirical surrogate for suspended sediment-bound bacterial load (*E. coli*, *Campylobacter*, *Cryptosporidium*, *Leptospira interrogans*):
 $$PathogenScore = Baseline(15) + f(Turbidity) + CSO\_Rainfall(20) + SewageOdor(35) + TempIncubation(10) + TubifexDominance(15)$$
 

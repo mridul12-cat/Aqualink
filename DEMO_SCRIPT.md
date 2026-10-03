@@ -1,126 +1,187 @@
-# AquaLink OneHealth: Official 4-Minute Video Demo Script & Storyboard
+# AquaLink: 4-Minute Video Demo Script & Storyboard
 > **IEEE OneAquaHealth Global Hackathon 2026**  
-> *Target Duration: 3:45 - 4:15 minutes*
+> *Target Duration: 3:45 – 4:15 minutes*  
+> *Key Position: AquaLink helps communities monitor urban streams by turning citizen observations into validated ecosystem-health signals, public-health risk indicators, and actionable alerts.*
 
 ---
 
-## Storyboard Overview & Timeline
+## Storyboard Overview & Master Timeline
 
-| Scene | Duration | Visual on Screen | Speaker Narration / Voiceover |
-| :---: | :---: | :--- | :--- |
-| **Scene 1** | 0:00 - 0:40 | Title card; news clips of urban water pollution & disease outbreak headline; architecture overview | **The Problem & One Health Gap**: The critical breakdown between environmental stream monitoring and public health response. |
-| **Scene 2** | 0:40 - 1:30 | Live UI: Regional Stream Map & Station Profile Modal | **Spatial Intelligence & One Health Scoring**: How freshwater metrics translate into pathogen risk, vector hazards, and recreational advisories. |
-| **Scene 3** | 1:30 - 2:35 | Live UI: Field Submission Wizard & Live AI Assistant | **Citizen Science UX & AI Validation (Track 3)**: Live demonstration of instant contradiction detection (the stonefly vs hypoxia paradox). |
-| **Scene 4** | 2:35 - 3:20 | Live UI: Resilience Panel & Municipal Triage Desk | **Actionable Intelligence & Early Warning**: Triage alerts, vector breeding warnings, and dispatching interventions. |
-| **Scene 5** | 3:20 - 3:55 | Live UI: HL7 FHIR R4 Bundle & LOINC Dictionary | **Standards & Clinical Interoperability (Track 7)**: Connecting citizen science to HL7 Europe, EFMI, and hospital EHRs. |
-| **Scene 6** | 3:55 - 4:15 | Summary slide with GitHub repo & hackathon call to action | **Conclusion**: From streams to systems—healthy waters for healthy communities. |
-
----
-
-## Full Spoken Script
-
-### [0:00 - 0:40] Scene 1: The Problem & The One Health Gap
-*(Visual: Camera starts on the AquaLink OneHealth title banner, then transitions to an animated graphic of an urban stream flowing through a dense city.)*
-
-**Speaker:**  
-"Every day, millions of citizens walk past urban streams. When heavy storms strike, sewer overflows and agricultural runoff wash pathogens into our waterways, while stagnant, warm reaches become breeding grounds for disease vectors like the *Culex* mosquito. 
-
-Yet today, environmental stream data and public health systems operate in complete silos. Water agencies measure pH and turbidity on spreadsheets, while hospitals and epidemiologists only learn about waterborne outbreaks or vector-borne infections weeks later when patients enter clinics.
-
-Furthermore, when citizen volunteers step up to monitor local waters, regulatory bodies often dismiss their data due to quality concerns and unverified observations.
-
-Welcome to **AquaLink OneHealth**: an autonomous, end-to-end platform built for the IEEE OneAquaHealth Hackathon that transforms citizen science into validated, clinical-grade One Health intelligence."
+| Scene | Timestamp | Screen / Location | Primary Focus | Narrative Beat |
+| :---: | :---: | :--- | :--- | :--- |
+| **Scene 1** | 0:00 – 0:20 | Splash / Regional Map overview (`http://localhost:5173`) | **Problem & Value Proposition** | The disconnect between community stream monitoring, ecological health, and public health action. |
+| **Scene 2** | 0:20 – 1:00 | Regional Map & Station Profile Modal (`Urban Paradox Creek` / `Willowbrook Urban Slough`) | **Show the Outcome First** | Full One Health assessment: WQI, EHI, model-derived pathogen indicators, vector hazards, and actionable municipal directives. |
+| **Scene 3** | 1:00 – 2:00 | Field Submit Tab (`ObservationForm`) & Validation Explainer Modal | **AI-Assisted Validation in Action** | Input realistic contradiction → "Contradiction Detected" → Click "Why? / How Validation Works" modal → Human review required → Load consistent observation. |
+| **Scene 4** | 2:00 – 2:40 | Resilience Tab (`EarlyWarningPanel`) | **Actionable Intelligence & Triage** | Translating validated signals into early warnings, triage directives, and municipal field dispatches. |
+| **Scene 5** | 2:40 – 3:15 | Standards Interop Modal (`InteropModal`) | **Digital Health & Geospatial Standards** | Native HL7 FHIR R4 Bundle with LOINC codes & OGC GeoJSON export for public health and environmental registries. |
+| **Scene 6** | 3:15 – 3:45 | Terminal & Architecture Overview | **Technical Rigor & Verification** | 41 automated tests (32 pytest + 9 npm), FastAPI + React 19 stack, Docker Compose reproducibility. |
+| **Scene 7** | 3:45 – 4:05 | Full Dashboard view | **Closing & One Health Vision** | "From seeing a problem in the water to understanding what it means and what should happen next." |
 
 ---
 
-### [0:40 - 1:30] Scene 2: Regional Intelligence Map & One Health Risk Scoring
-*(Visual: Switch to browser at `http://localhost:5173`. Show the Regional Stream Map tab. Mouse hovers over color-coded markers. Demonstrate the pilot dropdown switching seamlessly between Coimbra, Benevento, Oslo, and Portland.)*
+## Detailed Scene-by-Scene Script
 
-**Speaker:**  
-"Here on the regional dashboard, we see a live watershed monitoring network spanning 30 stations across 4 pilot basins—including official EU Horizon OneAquaHealth pilots in Coimbra, Benevento, and Oslo, alongside our international reference in Portland. Each station is evaluated using our **One Health Composite Engine**. 
+### [0:00 – 0:20] Scene 1: The Problem & Value Proposition
+**Screen Visual:**
+- Browser opened to `http://localhost:5173`.
+- The AquaLink header displays: *"AI-Assisted Citizen Science & One Health Early Warning Platform"*.
+- Map displays 30 monitoring stations across 4 international pilot basins (Coimbra, Benevento, Oslo, Portland) with color-coded risk markers.
 
-Notice how our pins are color-coded:
-- Green and cyan pins represent resilient, high-integrity reaches like *Silver Creek Headwaters* or *Coselhas Springs*.
-- Yellow pins indicate stressed baselines.
-- Rose-colored pins flag severe public health or ecological emergencies.
+**Speaker Narration:**
+> *"Every day, community volunteers walk urban streams, collecting vital environmental data. But raw numbers often hit dead ends: agencies question unverified data, public health teams operate in silos, and communities don't know what action to take.*
+> 
+> *AquaLink bridges this gap: turning citizen observations into validated ecosystem-health signals, public-health risk indicators, and actionable alerts."*
 
-Let’s click on *Willowbrook Urban Slough*. 
-
-*(Visual: Click on station STA-002 in Portland or PRT-COI-005 in Coimbra. The rich Stream Profile Modal opens, displaying the localized pilot basin flag, station ID, and catchment basin.)*
-
-Instantly, our engine synthesizes raw sensor data into three interconnected One Health pillars:
-1. **Water Quality Index (WQI)**: derived from theoretical dissolved oxygen saturation curves.
-2. **Ecological Health**: combining BMWP and Hilsenhoff Family Biotic Indices from benthic macroinvertebrates.
-3. **Public Health Disease Vector Hazards**: Here, dissolved oxygen has dropped to a hypoxic 2.8 mg/L at 25°C. Our algorithm detects that this hypoxia has eliminated predator fish, creating an optimal, predator-free nursery for *Culex* mosquitoes. It immediately flags a **HIGH Vector-Borne Hazard** and posts an **UNSAFE** recreational advisory."
+**Visual Cue for Recorder:**
+- Pan gently across the regional map showing station markers.
+- Show the pilot selector dropdown switching between Coimbra, Benevento, Oslo, and Portland.
 
 ---
 
-### [1:30 - 2:35] Scene 3: Citizen Field Submission & AI Contradiction Detection (Track 3)
-*(Visual: Click over to the 'Field Submit' tab. Show the clean, guided multi-step form.)*
+### [0:20 – 1:00] Scene 2: Show the Outcome First (One Health Intelligence)
+**Screen Visual:**
+- Click on station **`STA-002: Willowbrook Urban Slough`** (or `PRT-COI-005` in Coimbra).
+- The **Stream Detail Modal** opens up with clear semantic sections: `[OBSERVED]`, `[INFERRED]`, and `[RECOMMENDED ACTION]`.
+- Highlight the **One Health Harmony Score (41/100 - Degraded)**.
 
-**Speaker:**  
-"Now let’s look at Track 1 Citizen Science UX and Track 3 AI-Supported Assessment. 
+**Speaker Narration:**
+> *"Let’s look at the destination first: what does a community or public health authority actually see?*
+> 
+> *When we open Willowbrook Slough, AquaLink immediately breaks down the site into three distinct layers:*
+> - *First, **Observed Physical Parameters**: 24.8°C water temperature, 2.8 mg/L dissolved oxygen, and high organic pollution.*
+> - *Second, **Inferred One Health Signals**: dissolved oxygen saturation is down to 34%—a severe hypoxic state. Because fish predators cannot survive in hypoxia, this creates a prime breeding habitat for Culex mosquitoes, flagging an **Elevated Vector-Borne Hazard (76/100)**. Turbidity and sewage indicators trigger a **High Waterborne Pathogen Risk Indicator (72/100)**—clearly marked as a model-derived indicator requiring laboratory confirmation.*
+> - *Third, **Recommended Actions**: an Unsafe recreational advisory, combined sewer overflow inspection, and targeted biological larviciding."*
 
-Volunteers are guided through an intuitive, jargon-free wizard: entering in-situ probe readings, counting macroinvertebrates with one-click counters, and logging field odor and water clarity.
-
-On the right, our **AI Validation Agent** operates continuously as the user types. 
-
-Let's test it with a classic ecological contradiction:
-*(Visual: Click the demo button 'Contradiction Paradox'.)*
-
-Watch what happens: The user reported a water clarity of *crystal clear*, but entered a sensor turbidity of *68 NTU*. Even more critically, they reported 6 *Plecoptera stonefly nymphs* in water with a dissolved oxygen of only 3.2 mg/L alongside a sewage odor.
-
-Instantly, our AI Pipeline flags:
-- **Flag 1**: Sensor-Visual Contradiction—crystal clear water cannot produce 68 NTU.
-- **Flag 2**: Ecological Paradox—stoneflies possess delicate gills that physically suffocate in oxygen below 5 mg/L.
-- The AI explains the scientific rationale in plain English and drops data confidence to 45%, setting a **Human-in-the-Loop** flag so anomalous data cannot corrupt regulatory baselines!
-
-Now let’s load a certified pristine observation:
-*(Visual: Click 'Pristine Headwater' button. The badge flashes green: 100% Confidence, Certified.)*
-
-With zero contradictions, the volunteer clicks **Certify & Submit**, instantly incorporating their findings into regional surveillance."
+**Visual Cue for Recorder:**
+- Point cursor to the `[OBSERVED]` sensor strip.
+- Hover over the **Waterborne Pathogen Risk Indicator** card to highlight the *(Model-derived indicator based on environmental conditions; laboratory confirmation is required)* notice.
+- Scroll to the `[RECOMMENDED ACTION]` section to show specific field directives.
 
 ---
 
-### [2:35 - 3:20] Scene 4: Early Warning & Municipal Resilience Center
-*(Visual: Click on the 'Resilience' tab. Show the hazard counters and active directives.)*
+### [1:00 – 2:00] Scene 3: Citizen Science Submission & AI-Assisted Validation
+**Screen Visual:**
+- Close modal and switch to the **"Field Submit"** tab (`ObservationForm.tsx`).
+- Show the guided 4-step wizard: Probe Readings, Macroinvertebrates, Visual/Odor, Review.
+- Click the preset demo button: **"Contradiction Paradox"**.
 
-**Speaker:**  
-"For municipal authorities and watershed managers, AquaLink OneHealth serves as an automated Early Warning triage center.
+**Speaker Narration:**
+> *"Now let's see how we get here. How can citizen science be trusted for One Health surveillance without claiming unrealistic automated perfection?*
+> 
+> *Here in our Field Submission Wizard, a volunteer enters stream data. Let's load a realistic field scenario containing an ecological paradox.*
+> 
+> *Look at the live validation card on the right: the engine immediately flags **Contradiction Detected** and drops validation confidence to 45%.*
+> 
+> *Why? Let's click **'Why? How Validation Works'**.*
+> 
+> *(Click 'Why? How Validation Works' button to open the Validation Explainer Modal).*
+> 
+> *AquaLink’s validator isn’t an opaque black box. It's an explainable, rule-based consistency engine built on freshwater science:*
+> 1. *It detected that reporting 'Crystal Clear' water contradicts an instrument turbidity of 68 NTU.*
+> 2. *More critically, the observer reported 6 Plecoptera stonefly nymphs in water with only 3.2 mg/L dissolved oxygen. Stoneflies possess delicate tracheal gills that suffocate below 5.0 mg/L.*
+> 
+> *Rather than silently rejecting or guessing, AquaLink tags this observation: **'HUMAN REVIEW REQUIRED'**. It protects baseline integrity while keeping the human in the loop.*
+> 
+> *(Close modal, click 'Pristine Headwater' preset).*
+> 
+> *When consistent data is entered, no automated contradictions are detected, and the observation is accepted for One Health surveillance."*
 
-Instead of deciphering raw numbers, municipal officers see direct, actionable directives:
-- Waterborne Pathogen Alerts prompt sewer outfall dye tracing.
-- Stagnant Vector Triggers recommend immediate culvert clearing and biological larvicide application.
-- Toxic Cyanobacteria warnings prompt immediate signage to protect children and pets.
-
-With a single click, officers can log municipal dispatch or print a formal incident briefing for public health teams."
+**Visual Cue for Recorder:**
+- Click "Contradiction Paradox". The amber/red warning appears with specific bullet points.
+- Click "Why? How Validation Works" to open the interactive `ValidationExplainerModal`. Show the 4 scientific rule cards.
+- Close modal. Click "Pristine Headwater". Show the green status: *"Validated — No Automated Contradictions Detected"*. Click *"Verify & Submit"*.
 
 ---
 
-### [3:20 - 3:55] Scene 5: Digital Health Standards & Interoperability (Track 7)
-*(Visual: Click on the 'HL7 FHIR / OGC' tab. Show the live JSON viewer and LOINC table.)*
+### [2:00 – 2:40] Scene 4: Early Warning & Municipal Resilience
+**Screen Visual:**
+- Switch to the **"Resilience"** tab (`EarlyWarningPanel.tsx`).
+- Display the active hazard triage queue, summary alert counters, and municipal intervention cards.
 
-**Speaker:**  
-"To satisfy the core objectives of Track 7 and hackathon sponsors **HL7 Europe** and **EFMI**, AquaLink OneHealth breaks through the digital health barrier.
+**Speaker Narration:**
+> *"Once validated, observations flow directly into the Early Warning Resilience Desk.*
+> 
+> *Instead of burying municipal teams in raw sensor logs, AquaLink synthesizes catchment-level hazards:*
+> - *Pathogen Risk Indicators aggregate turbidity anomalies and sewage odor reports across stations.*
+> - *Vector Breeding alerts prioritize stagnant, hypoxic reaches for proactive vector control before mosquito emergence.*
+> - *Cyanobacterial bloom alerts warn of pet toxicity risks.*
+> 
+> *Watershed managers can review real-time incident briefs, dispatch municipal field teams with one click, and coordinate proactive interventions before public health crises escalate."*
 
-Every single field observation is dynamically converted into an **HL7 FHIR R4 Bundle**. 
-- Temperature is mapped to LOINC `8040-0`.
-- pH to LOINC `11558-4`.
-- Dissolved oxygen to LOINC `2710-2`.
-- Pathogen and vector risks are exported as standard FHIR `RiskAssessment` resources.
-
-This means a regional hospital EHR or public health surveillance network can ingest this data directly, enabling doctors to cross-reference patient symptoms with upstream stream contamination in real time. 
-
-Simultaneously, we expose an **OGC GeoJSON** endpoint for spatial GIS and satellite earth observation networks."
+**Visual Cue for Recorder:**
+- Click on an active alert card.
+- Click the *"Dispatch Field Team"* or *"Print Incident Brief"* button to demonstrate municipal workflow simulation.
 
 ---
 
-### [3:55 - 4:15] Scene 6: Conclusion
-*(Visual: Return to the full dashboard overview with all tabs and stats visible.)*
+### [2:40 – 3:15] Scene 5: Digital Health Standards & Interoperability
+**Screen Visual:**
+- Click the **"Digital Health (FHIR / OGC)"** navigation button to open the Interoperability Modal (`InteropModal.tsx`).
+- Show the **HL7 FHIR R4 Bundle** tab with live JSON viewer, then switch to the **LOINC Vocabulary** and **OGC GeoJSON** tabs.
 
-**Speaker:**  
-"AquaLink OneHealth is fully production-ready: built with FastAPI, 41 automated tests (32 backend + 9 frontend), React 19, and single-command Docker Compose reproducibility.
+**Speaker Narration:**
+> *"To bridge environmental monitoring with public health registries, AquaLink implements standard digital health interoperability, addressing Track 7.*
+> 
+> *Every observation can be exported dynamically as an **HL7 FHIR R4 Bundle**:*
+> - *Water temperature maps to LOINC `8040-0`.*
+> - *pH maps to LOINC `11558-4`.*
+> - *Dissolved oxygen maps to LOINC `2710-2`.*
+> - *Pathogen and vector risks are packaged as standardized FHIR `RiskAssessment` resources.*
+> 
+> *This allows public health epidemiologists and environmental health surveillance systems to consume validated stream observations using the same open data standards as modern healthcare registries.*
+> 
+> *Simultaneously, our **OGC GeoJSON** endpoint provides geospatial interoperability for municipal GIS and urban planning platforms."*
 
-By uniting citizen science, explainable artificial intelligence, and digital health standards, we turn streams into systems—empowering healthy waters, healthy ecosystems, and healthy communities.
+**Visual Cue for Recorder:**
+- Toggle between the `HL7 FHIR R4 Bundle` code tab and the `LOINC Concept Dictionary` table.
+- Click `Copy FHIR JSON` to highlight developer accessibility.
+- Switch to the `OGC GeoJSON` tab showing standard CRS84 spatial coordinates.
 
-Thank you!"
+---
+
+### [3:15 – 3:45] Scene 6: Technical Rigor, Verification & Reproducibility
+**Screen Visual:**
+- Cut briefly to split-screen: VS Code / Terminal running automated test suites.
+- Show `pytest backend/tests` passing 32 tests.
+- Show `npm test` passing 9 frontend tests.
+- Show `docker-compose.yml` and clean multi-stage architecture.
+
+**Speaker Narration:**
+> *"Behind the interface is a robust, production-tested architecture:*
+> - *FastAPI backend with Pydantic v2 data models.*
+> - *React 19, TypeScript, and Tailwind CSS frontend.*
+> - *Strict physical-chemical formulations including USGS Benson & Krause dissolved oxygen kinetics, BMWP macroinvertebrate weighting, and Hilsenhoff biotic indexing.*
+> - *41 automated tests—32 backend pytest unit tests and 9 frontend unit tests—verifying validation rules, hazard formulas, and FHIR serialization.*
+> - *And full reproducibility via single-command Docker Compose."*
+
+**Visual Cue for Recorder:**
+- Show terminal with green test execution output (`32 passed in 0.53s`, `9 passed in 0.22s`).
+- Show clean architecture diagram or terminal showing both backend and frontend running.
+
+---
+
+### [3:45 – 4:05] Scene 7: Conclusion & The One Health Vision
+**Screen Visual:**
+- Return to the live AquaLink Regional Stream Map dashboard.
+- Mouse hovers over the catchment statistics bar and pilot city selector.
+
+**Speaker Narration:**
+> *"Urban streams are the earliest indicators of environmental degradation and community health risk.*
+> 
+> *AquaLink turns citizen observations into validated One Health intelligence—helping communities move from seeing a problem in the water to understanding what it means and what should happen next.*
+> 
+> *Thank you."*
+
+**Visual Cue for Recorder:**
+- Hold on the live dashboard overview with all monitoring stations and One Health metrics clearly visible. Fade to black or display repository URL.
+
+---
+
+## Production & Recording Checklist
+
+- [ ] **Backend running**: `cd backend && source venv/bin/activate && uvicorn app.main:app --port 8000`
+- [ ] **Frontend running**: `cd frontend && npm run dev` (running at `http://localhost:5173`)
+- [ ] **Browser zoom level**: 100% or 110% on 1920x1080 resolution.
+- [ ] **Audio**: Clear microphone with noise suppression enabled.
+- [ ] **Pacing**: Steady, conversational tempo (~135-145 words per minute).
+- [ ] **Key Disclaimers Present**: Ensure the pathogen risk indicator model-derived disclaimer and human-in-the-loop validation tags are visible on screen.

@@ -6,8 +6,8 @@ from .api.routes import router as api_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    description="AquaLink OneHealth - Autonomous Platform for IEEE OneAquaHealth Hackathon. "
-                "From streams to systems: turning citizen science into actionable One Health intelligence. "
+    description="AquaLink OneHealth - AI-Assisted Assessment Platform for IEEE OneAquaHealth Hackathon. "
+                "From citizen observations to actionable One Health intelligence. "
                 "Compliant with HL7 FHIR R4 and OGC standards.",
     version=settings.VERSION,
     docs_url="/docs",

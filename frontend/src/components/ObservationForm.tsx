@@ -25,8 +25,10 @@ import {
   Loader2,
   Check,
   RefreshCw,
-  Globe2
+  Globe2,
+  Info
 } from 'lucide-react';
+import { ValidationExplainerModal } from './ValidationExplainerModal';
 
 interface ObservationFormProps {
   onObservationAdded: (newRecord: StreamObservationRecord) => void;
@@ -134,6 +136,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submittedRecord, setSubmittedRecord] = useState<StreamObservationRecord | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showExplainer, setShowExplainer] = useState<boolean>(false);
 
   // Build payload
   const currentPayload: CitizenObservationCreate = {
@@ -414,7 +417,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
             </div>
             <div>
               <h2 className="text-base font-bold text-white">
-                Observation Successfully Certified & Recorded!
+                Observation Successfully Validated & Recorded!
               </h2>
               <p className="text-xs text-emerald-300/90 mt-0.5">
                 {submittedRecord.stream_name} assigned One Health Score:{' '}
@@ -540,7 +543,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-4">
             <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5 pb-2 border-b border-slate-800">
               <Droplets className="w-3.5 h-3.5 text-cyan-400" />
-              <span>2. Physical & Chemical Probe Measurements</span>
+              <span>2. [OBSERVED] Physical & Chemical In-Situ Measurements</span>
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -665,7 +668,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
             <div className="flex items-center justify-between pb-2 border-b border-slate-800">
               <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
                 <Bug className="w-3.5 h-3.5 text-teal-400" />
-                <span>3. Macroinvertebrates & Bio-Indicators</span>
+                <span>3. [OBSERVED] Macroinvertebrates & Bio-Indicators</span>
               </h3>
               <span className="text-[10px] text-slate-400">BMWP & EPT Richness Metric</span>
             </div>
@@ -867,7 +870,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-4">
             <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5 pb-2 border-b border-slate-800">
               <Eye className="w-3.5 h-3.5 text-indigo-400" />
-              <span>4. Visual & Environmental Field Observations</span>
+              <span>4. [OBSERVED] Visual & Environmental Field Observations</span>
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -977,7 +980,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
           {/* Submit Button */}
           <div className="flex items-center justify-between pt-2">
             <span className="text-xs text-slate-400">
-              Validated submissions are transformed into HL7 FHIR and OGC standards.
+              Validated observations feed into One Health risk assessment and interoperability exports.
             </span>
             <button
               type="submit"
@@ -992,7 +995,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
               ) : (
                 <>
                   <Send className="w-4 h-4" />
-                  <span>Certify & Submit Observation</span>
+                  <span>Verify & Submit Observation</span>
                 </>
               )}
             </button>
@@ -1012,17 +1015,33 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
                 </div>
                 <div>
                   <h3 className="text-sm font-extrabold text-white">AI Validation Agent</h3>
-                  <span className="text-[10px] text-slate-400">Continuous Heuristic & Ecological Reasoning</span>
+                  <span className="text-[10px] text-slate-400">Explainable Scientific Rule & Anomaly Checks</span>
                 </div>
               </div>
-              {isValidating && <RefreshCw className="w-3.5 h-3.5 text-teal-400 animate-spin" />}
+              <div className="flex items-center space-x-2">
+                {isValidating && <RefreshCw className="w-3.5 h-3.5 text-teal-400 animate-spin" />}
+                <button
+                  type="button"
+                  onClick={() => setShowExplainer(true)}
+                  className="px-2 py-1 rounded bg-teal-500/10 hover:bg-teal-500/20 text-teal-400 border border-teal-500/30 text-[10px] font-bold flex items-center space-x-1 transition-all"
+                  title="View scientific validation rules and evidence"
+                >
+                  <HelpCircle className="w-3 h-3" />
+                  <span>How Validation Works</span>
+                </button>
+              </div>
             </div>
 
             {/* Confidence Score Bar */}
             {validationResult && (
               <div className="mt-4 space-y-2">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="text-slate-400 font-medium">Data Confidence Score</span>
+                  <div>
+                    <span className="text-slate-300 font-semibold block">Validation Confidence</span>
+                    <span className="text-[10px] text-slate-400 block">
+                      Reflects agreement with prototype rules; not scientific certainty.
+                    </span>
+                  </div>
                   <span className={`font-mono font-extrabold text-sm ${
                     validationResult.confidence_score >= 80 ? 'text-emerald-400' :
                     validationResult.confidence_score >= 60 ? 'text-amber-400' : 'text-rose-400'
@@ -1045,7 +1064,7 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
                   {validationResult.status === 'VERIFIED' && (
                     <div className="flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/30 px-3 py-2 rounded-lg text-emerald-400 text-xs">
                       <CheckCircle2 className="w-4 h-4 shrink-0" />
-                      <span className="font-semibold">Observation Certified (Zero Contradictions)</span>
+                      <span className="font-semibold">Validated — No Automated Contradictions Detected</span>
                     </div>
                   )}
 
@@ -1074,14 +1093,26 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
                 {/* Contradictions List */}
                 {validationResult.contradictions_detected.length > 0 && (
                   <div className="mt-4 space-y-2">
-                    <span className="text-[11px] font-bold text-rose-400 uppercase tracking-wider block">
-                      Critical Contradictions:
-                    </span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-rose-400 uppercase tracking-wider block">
+                        Critical Contradictions ({validationResult.contradictions_detected.length}):
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setShowExplainer(true)}
+                        className="text-[10px] text-teal-400 hover:text-teal-300 font-semibold underline flex items-center space-x-0.5"
+                      >
+                        <span>Why?</span>
+                      </button>
+                    </div>
                     {validationResult.contradictions_detected.map((c, idx) => (
                       <div key={idx} className="bg-rose-950/40 border border-rose-500/30 p-2.5 rounded-lg text-xs text-rose-200">
                         {c}
                       </div>
                     ))}
+                    <p className="text-[10px] text-slate-400 italic">
+                      Contradictions do not discard citizen observations. They flag the record for human-in-the-loop review.
+                    </p>
                   </div>
                 )}
 
@@ -1136,6 +1167,12 @@ export const ObservationForm: React.FC<ObservationFormProps> = ({ onObservationA
         </div>
 
       </div>
+
+      {/* Validation Explainer Modal */}
+      <ValidationExplainerModal
+        isOpen={showExplainer}
+        onClose={() => setShowExplainer(false)}
+      />
 
     </div>
   );

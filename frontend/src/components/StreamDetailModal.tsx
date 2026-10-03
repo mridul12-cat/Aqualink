@@ -14,8 +14,14 @@ import {
   Copy,
   Check,
   ExternalLink,
-  Info
+  Info,
+  Sparkles,
+  HelpCircle,
+  AlertOctagon,
+  Eye,
+  Shield
 } from 'lucide-react';
+import { ValidationExplainerModal } from './ValidationExplainerModal';
 
 interface StreamDetailModalProps {
   stream: StreamObservationRecord | null;
@@ -27,6 +33,7 @@ export const StreamDetailModal: React.FC<StreamDetailModalProps> = ({ stream, on
   const [fhirData, setFhirData] = useState<any>(null);
   const [isLoadingFhir, setIsLoadingFhir] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showExplainer, setShowExplainer] = useState(false);
 
   if (!stream) return null;
 
@@ -146,30 +153,116 @@ export const StreamDetailModal: React.FC<StreamDetailModalProps> = ({ stream, on
 
           </div>
 
-          {/* Plain Language Summary */}
-          <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-4">
-            <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center space-x-1.5">
-              <Info className="w-3.5 h-3.5 text-teal-400" />
-              <span>Plain-Language One Health Summary</span>
-            </h3>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              {assessment.plain_language_summary}
-            </p>
+          {/* AI-Assisted Validation & Data Provenance */}
+          <div className="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+              <div className="flex items-center space-x-2">
+                <span className="p-1.5 rounded-lg bg-teal-500/10 text-teal-400 border border-teal-500/20">
+                  <Sparkles className="w-4 h-4" />
+                </span>
+                <div>
+                  <h3 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+                    AI-Assisted Validation & Data Provenance
+                  </h3>
+                  <span className="text-[10px] text-slate-400">Explainable scientific rule checks & contradiction detection</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowExplainer(true)}
+                className="px-2.5 py-1 rounded bg-teal-500/10 hover:bg-teal-500/20 text-teal-400 border border-teal-500/30 text-xs font-bold flex items-center space-x-1 transition-all"
+              >
+                <HelpCircle className="w-3.5 h-3.5" />
+                <span>How Validation Works</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="bg-slate-900/80 border border-slate-800 p-2.5 rounded-lg">
+                <span className="text-slate-400 block text-[10px]">Validation Status</span>
+                <span className={`inline-block font-mono font-bold text-xs mt-1 px-2 py-0.5 rounded ${
+                  val.status === 'VERIFIED' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+                  val.status === 'FLAG_CONTRADICTION' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' :
+                  val.status === 'FLAG_ANOMALY' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
+                  'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                }`}>
+                  {val.status}
+                </span>
+              </div>
+
+              <div className="bg-slate-900/80 border border-slate-800 p-2.5 rounded-lg">
+                <span className="text-slate-400 block text-[10px]">Verification Action</span>
+                <span className={`inline-block font-bold text-xs mt-1 px-2 py-0.5 rounded ${
+                  val.human_in_the_loop_flag
+                    ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+                    : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                }`}>
+                  {val.human_in_the_loop_flag ? 'HUMAN REVIEW REQUIRED' : 'AUTOMATED CHECKS PASSED'}
+                </span>
+              </div>
+
+              <div className="bg-slate-900/80 border border-slate-800 p-2.5 rounded-lg">
+                <div className="flex justify-between items-baseline">
+                  <span className="text-slate-400 text-[10px]">Validation Confidence</span>
+                  <span className="font-mono font-black text-sm text-teal-300">{val.confidence_score}%</span>
+                </div>
+                <span className="text-[9px] text-slate-500 block leading-tight mt-1">
+                  Confidence reflects rule agreement; not scientific certainty.
+                </span>
+              </div>
+            </div>
+
+            {val.contradictions_detected.length > 0 && (
+              <div className="space-y-1.5 pt-1">
+                <span className="text-[10px] font-bold text-rose-400 uppercase tracking-wider block">
+                  Contradictions Flagged ({val.contradictions_detected.length}):
+                </span>
+                {val.contradictions_detected.map((c, i) => (
+                  <div key={i} className="text-xs text-rose-300 bg-rose-950/40 border border-rose-500/30 p-2 rounded-lg">
+                    {c}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="bg-slate-900/60 p-2.5 rounded-lg text-xs text-slate-300">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                Scientific Rationale:
+              </span>
+              <p className="text-[11px] text-slate-300 leading-relaxed">
+                {val.scientific_rationale}
+              </p>
+            </div>
           </div>
 
-          {/* Public Health Hazard Vector Matrix */}
+          {/* Section: INFERRED One Health Synthesis */}
           <div className="space-y-3">
-            <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
-              <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
-              <span>Public Health Disease Vector Hazards</span>
-            </h3>
+            <div className="flex items-center justify-between pb-1 border-b border-slate-800">
+              <h3 className="text-xs font-bold text-teal-400 uppercase tracking-wider flex items-center space-x-1.5">
+                <Activity className="w-3.5 h-3.5 text-teal-400" />
+                <span>[INFERRED] One Health Risk Indicators & Ecosystem Synthesis</span>
+              </h3>
+              <span className="text-[10px] text-slate-400">Model-derived indicators</span>
+            </div>
 
+            {/* Plain Language Summary */}
+            <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-4">
+              <h4 className="text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center space-x-1.5">
+                <Info className="w-3.5 h-3.5 text-teal-400" />
+                <span>Plain-Language Synthesis</span>
+              </h4>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                {assessment.plain_language_summary}
+              </p>
+            </div>
+
+            {/* Public Health Hazard Vector Matrix */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               
-              {/* Pathogen Risk */}
+              {/* Pathogen Risk Indicator */}
               <div className="bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-200">Waterborne Pathogens</span>
+                  <span className="text-xs font-bold text-slate-200">Waterborne Pathogen Risk Indicator</span>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
                     hazards.waterborne_pathogen_risk === 'LOW' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
                     hazards.waterborne_pathogen_risk === 'MODERATE' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
@@ -181,7 +274,10 @@ export const StreamDetailModal: React.FC<StreamDetailModalProps> = ({ stream, on
                 <div className="text-xs text-slate-400">
                   Risk Score: <strong className="text-white">{hazards.pathogen_risk_score}/100</strong>
                 </div>
-                <ul className="text-[11px] text-slate-400 space-y-1 list-disc pl-4">
+                <span className="text-[10px] text-amber-400/90 block italic">
+                  Model-derived indicator based on environmental conditions; laboratory confirmation is required.
+                </span>
+                <ul className="text-[11px] text-slate-400 space-y-1 list-disc pl-4 pt-1">
                   {hazards.pathogen_vectors.map((v, i) => (
                     <li key={i}>{v}</li>
                   ))}
@@ -211,7 +307,7 @@ export const StreamDetailModal: React.FC<StreamDetailModalProps> = ({ stream, on
               {/* Cyanobacterial HAB */}
               <div className="bg-slate-950 border border-slate-800 rounded-xl p-3.5 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-200">Toxic HAB Bloom</span>
+                  <span className="text-xs font-bold text-slate-200">Toxic HAB Bloom Indicator</span>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
                     hazards.cyanobacterial_hab_risk === 'LOW' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
                     hazards.cyanobacterial_hab_risk === 'MODERATE' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
@@ -234,7 +330,7 @@ export const StreamDetailModal: React.FC<StreamDetailModalProps> = ({ stream, on
           {/* Physical & Chemical In-situ measurements grid */}
           <div className="bg-slate-950 border border-slate-800 rounded-xl p-4">
             <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">
-              Recorded Physical & Chemical In-Situ Parameters
+              [OBSERVED] Physical & Chemical In-Situ Probe Parameters
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
               <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
@@ -276,7 +372,7 @@ export const StreamDetailModal: React.FC<StreamDetailModalProps> = ({ stream, on
           {stream.bio && (
             <div className="bg-slate-950 border border-slate-800 rounded-xl p-4">
               <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center justify-between">
-                <span>Benthic Macroinvertebrate Survey Observations</span>
+                <span>[OBSERVED] Benthic Macroinvertebrate Field Observations</span>
                 <span className="text-[10px] text-teal-400 font-normal">BMWP: {bio.bmwp_score} ({bio.bmwp_class})</span>
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
@@ -335,7 +431,7 @@ export const StreamDetailModal: React.FC<StreamDetailModalProps> = ({ stream, on
           {/* Actionable Interventions */}
           <div className="bg-slate-950 border border-slate-800 rounded-xl p-4">
             <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
-              Actionable Municipal & Community Interventions
+              [RECOMMENDED ACTION] Actionable Municipal & Community Interventions
             </h3>
             <ul className="text-xs text-slate-300 space-y-1.5 list-disc pl-5">
               {assessment.actionable_interventions.map((action, i) => (
@@ -404,6 +500,13 @@ export const StreamDetailModal: React.FC<StreamDetailModalProps> = ({ stream, on
         </div>
 
       </div>
+
+      {/* Validation Explainer Modal */}
+      <ValidationExplainerModal
+        isOpen={showExplainer}
+        onClose={() => setShowExplainer(false)}
+      />
+
     </div>
   );
 };

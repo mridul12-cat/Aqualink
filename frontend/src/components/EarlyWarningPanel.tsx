@@ -80,15 +80,15 @@ export const EarlyWarningPanel: React.FC<EarlyWarningPanelProps> = ({ alerts, st
           }`}
         >
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold text-rose-400 uppercase tracking-wider">Pathogen / CSO Alerts</span>
+            <span className="text-xs font-bold text-rose-400 uppercase tracking-wider">Pathogen Risk Indicators</span>
             <Droplets className="w-4 h-4 text-rose-400" />
           </div>
           <div className="flex items-baseline space-x-2">
             <span className="text-3xl font-black text-rose-400 font-mono">{pathogenCount}</span>
-            <span className="text-xs text-slate-400">active sites</span>
+            <span className="text-xs text-slate-400">elevated sites</span>
           </div>
           <p className="text-[11px] text-slate-400 mt-2">
-            E. coli / Coliform runoff, sewer overflow, extreme turbidity.
+            Model-derived indicator (turbidity, CSO, sewage odor); laboratory confirmation required.
           </p>
         </div>
 

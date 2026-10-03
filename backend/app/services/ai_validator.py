@@ -201,8 +201,8 @@ def validate_stream_observation(obs: CitizenObservationCreate) -> AIValidationRe
         )
     else:
         scientific_rationale = (
-            f"AI Pipeline verified observation: 100% concordance between physical-chemical readings, benthic macroinvertebrate "
-            f"guilds, and field visual observations. Fully certified for One Health surveillance."
+            f"Validated — no automated contradictions detected across physical-chemical readings, benthic macroinvertebrate "
+            f"guilds, and field visual observations. Observation accepted for One Health surveillance."
         )
 
     return AIValidationResult(
